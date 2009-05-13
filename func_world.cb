@@ -1,0 +1,1223 @@
+// LICENSE: See LICENSE-file
+
+// ----------- FUNCTIONS ---------- //
+
+
+// Generator functions //
+
+Function CreateWorld()
+    AddLog("#### Start: Creating world @ " + Timer())
+    Randomize seed
+
+    // Land types...
+    Print "Creating forests..."
+    AddLog("#### Creating forests...")
+    CreateArea(forest,    numForests,   .02)
+    Print "Creating hills..."
+    AddLog("#### Creating hills...")
+    CreateArea(hills,     numHills,     .035)
+    Print "Creating mountain ranges..."
+    AddLog("#### Creating mountain ranges...")
+    CreateArea(mountains, numMountains, .02)
+    Print "Creating lakes..."
+    AddLog("#### Creating lakes...")
+    CreateArea(water,     numLakes,     .04)
+
+    // Castles...
+    Print "Creating castles..."
+    AddLog("#### Creating castles...")
+    For i = 1 To numCastles
+        randcastle:
+        locs(i,1) = Rand(2,maxx(0)-1): locs(i,2) = Rand(2,maxy(0)-1)
+        If world(locs(i,1),locs(i,2)) = grass Or world(locs(i,1),locs(i,2)) = forest Then world(locs(i,1),locs(i,2)) = Rand(castle1,castle4) Else Goto randcastle
+    Next i
+
+    // Villages...
+    Print "Creating villages..."
+    AddLog("#### Creating villages...")
+    For i = numCastles+1 To numCastles+numVillages
+        randvillage:
+        locs(i,1) = Rand(2,maxx(0)-1): locs(i,2) = Rand(2,maxy(0)-1)
+        If world(locs(i,1),locs(i,2)) = grass Or world(locs(i,1),locs(i,2)) = forest Then world(locs(i,1),locs(i,2)) = Rand(village,village2) Else Goto randvillage
+    Next i
+
+    // Caves...
+    Print "Creating caves..."
+    AddLog("#### Creating caves...")
+    For i = numCastles+numVillages+1 To numMaps
+        randcave:
+        locs(i,1) = Rand(2,maxx(0)-1): locs(i,2) = Rand(2,maxy(0)-1)
+        If world(locs(i,1),locs(i,2)) = mountains Then world(locs(i,1),locs(i,2)) = cave Else Goto randcave
+    Next i
+
+    // Borders...
+    AddLog("#### Creating borders...")
+    world(maxx(0),1) = mountains
+    world(1,maxy(0)) = water
+
+    For i = 1 To maxx(0)
+        If world(i,1)       = 0 And Rand(1,3) = 1 Then world(i,1)       = mountains
+        If world(i,maxy(0)) = 0 And Rand(1,3) = 1 Then world(i,maxy(0)) = water
+    Next i
+    For j = 1 To maxy(0)
+        If world(1,j)       = 0 And Rand(1,3) = 1 Then world(1,j)       = water
+        If world(maxx(0),j) = 0 And Rand(1,3) = 1 Then world(maxx(0),j) = mountains
+    Next j
+    AddLog("#### End: Creating world @ " + Timer())    
+End Function
+
+
+
+Function CreateArea(AreaType,Amount=1,Psize#=.01,map=0)
+    For i = 1 To Amount
+        n = 1
+        crx(n) = Rand(1,maxx(map))
+        cry(n) = Rand(1,maxy(map))
+        P(n) = 1.0
+        While n > 0
+            xx = crx(n)
+            yy = cry(n)
+            AreaSeed# = P(n)
+            n = n - 1
+            If xx < 1 Then xx = xx + maxx(map)
+            If xx > maxx(map) Then xx = xx - maxx(map)
+            If yy < 1 Then yy = yy + maxy(map)
+            If yy > maxy(map) Then yy = yy - maxy(map)
+            If world(xx,yy) = 0 And Rnd(1) < AreaSeed Then
+                world(xx,yy) = AreaType
+                crx(n) = xx: cry(n) = yy - 1: P(n) = AreaSeed - Psize: n = n + 1
+                If n > 50 Then n = 50
+                crx(n) = xx: cry(n) = yy + 1: P(n) = AreaSeed - Psize: n = n + 1
+                If n > 50 Then n = 50
+                crx(n) = xx - 1: cry(n) = yy: P(n) = AreaSeed - Psize: n = n + 1
+                If n > 50 Then n = 50
+                crx(n) = xx + 1: cry(n) = yy: P(n) = AreaSeed - Psize: n = n + 1
+                If n > 50 Then n = 50
+            EndIf
+        Wend
+    Next i
+End Function
+
+
+Function CreateCastle(index,xhouses=0,yhouses=0)
+    AddLog("#### Start: Creating castle @ " + Timer())
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+
+    housesize   = 12
+    streetwidth = 5
+    offset      = 2
+    maxfurnit   = 8
+  
+    If xhouses = 0 Then xhouses = Rand(8,10)
+    If yhouses = 0 Then yhouses = Rand(8,10)
+    xsize = xhouses * (housesize+streetwidth) + streetwidth + 4
+    ysize = yhouses * (housesize+streetwidth) + streetwidth + 4
+
+    ReDim CityPlan(xhouses,yhouses)
+    ReDim BuildingPlan(5)
+    Repeat
+        BuildingPlan(1) = Rand(1,5)                         // plazas
+        BuildingPlan(2) = Rand(1,2) + Rand(0,4)             // inns
+        BuildingPlan(3) = Rand(1,2) + Rand(0,4)             // smiths/shops
+        BuildingPlan(4) = Rand(0,1) + Rand(0,1) + Rand(0,1) // churches
+        BuildingPlan(5) = Rand(0,1) + Rand(0,1) + Rand(0,1) // stables
+        total = BuildingPlan(1)+BuildingPlan(2)+BuildingPlan(3)+BuildingPlan(4)+BuildingPlan(5)
+    Until total <= xhouses * yhouses - 4
+    If (xhouses Mod 2) = 0 Then townhallx = xhouses/2 Else townhallx = RoundDown(xhouses/2) + Rand(0,1)
+    If (yhouses Mod 2) = 0 Then townhally = yhouses/2 Else townhally = RoundDown(yhouses/2) + Rand(0,1)
+    CityPlan(townhallx  ,townhally  ) = 10
+    CityPlan(townhallx+1,townhally  ) = 11
+    CityPlan(townhallx  ,townhally+1) = 11
+    CityPlan(townhallx+1,townhally+1) = 11
+    For k = 1 To total
+        Repeat
+            i = Rand(1,xhouses) : j = Rand(1,yhouses)
+        Until CityPlan(i,j) = 0
+        Repeat
+            b = Rand(1,5)
+        Until BuildingPlan(b) <> 0
+        BuildingPlan(b) = BuildingPlan(b) - 1
+        CityPlan(i,j)   = b
+    Next k
+    
+    For j = 3 To ysize-2
+        For i = 3 To xsize-2
+            maps(i,j,index) = darkfloor
+        Next i
+    Next j
+
+    For j = 1 To yhouses
+        For i = 1 To xhouses
+            x1 = 2 + streetwidth + (i-1) * (housesize+streetwidth)
+            y1 = 2 + streetwidth + (j-1) * (housesize+streetwidth)
+            x2 = x1 + housesize
+            y2 = y1 + housesize
+            Select CityPlan(i,j)
+                Case 1
+                    CreatePlaza (index, x1, y1, x2, y2)
+                Case 2
+                    CreateInn   (index, x1 + Rand(0,offset/2), y1 + Rand(0,offset/2), x2 - Rand(0,offset/2), y2 - Rand(0,offset)/2)
+                Case 3
+                    CreateShop  (index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset))
+                Case 4
+                    CreateChurch(index, x1 + Rand(0,offset/2), y1 + Rand(0,offset/2), x2 - Rand(0,offset/2), y2 - Rand(0,offset/2))
+                Case 5
+                    CreateStable(index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset))
+                Case 10
+                    CreateTownHall(index, x1, y1, x1 + streetwidth + 2*housesize, y1 + streetwidth + 2*housesize)
+                Case 11
+                    nop=0
+                Default
+                    CreateHouse (index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset), Rand(4,maxfurnit), Rand(0,1))                
+            EndSelect
+        Next i
+    Next j
+ 
+    'outer castle wall
+    For i = 2 To xsize-1
+        maps(i,2,index) = wall
+        maps(i,ysize-1,index) = wall
+    Next i
+    For j = 2 To ysize-1
+        maps(2,j,index) = wall
+        maps(xsize-1,j,index) = wall
+    Next j
+
+    exitx = Rand(3,xsize-3)
+    exity = Rand(3,ysize-3)
+    If Rand(0,1) = 1 Then exitx = Rand(0,1)*(xsize-3) +2 Else exity = Rand(0,1)*(ysize-3) +2
+    maps(exitx,exity,index) = grass
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    locs(index,5) = xhouses * yhouses + Rand(0,20)
+    If locname(index) = "" Then locname(index) = RandomPlaceName()
+    AddLog("#### End: Creating castle @ " + Timer())
+End Function
+
+
+Function CreateHouse(index,x1,y1,x2,y2,furnit=0,locked=1)
+    MakeWallsAndFloor(index,x1,y1,x2,y2,floor)
+    housetype = Rand(0,2)
+    If housetype <> 0 Then
+        If Rand(0,1) = 0 Then   'horizontal wall
+            wy = Rand(y1+3,y2-3)
+            doorx = Rand(x1+1,x2-1)
+            doory = wy
+            For i = x1 To x2
+                If i<>doorx Or housetype = 2 Then maps(i,wy,index) = wall
+            Next i
+            AddFurniture(index,x1+1,y1+1,x2-1,wy-1,furnit/2)
+            AddFurniture(index,x1+1,wy+1,x2-1,y2-1,furnit/2)
+            If housetype = 1 Then
+                MakeDoor(index,doorx,doory,Rand(-1,1))
+                RandDoor(index,x1,y1,x2,y2,(Rand(0,9)=0))
+            ElseIf housetype = 2 Then
+                MakeDoor(index,Rand(x1+1,x2-1),y1,(Rand(0,9)=0))
+                MakeDoor(index,Rand(x1+1,x2-1),y2,(Rand(0,9)=0))
+            EndIf
+        Else                    'vertical wall
+            wx = Rand(x1+3,x2-3)
+            doory = Rand(y1+1,y2-1)
+            doorx = wx
+            For j = y1 To y2
+                If j<>doory Or housetype = 2 Then maps(wx,j,index) = wall
+            Next j
+            AddFurniture(index,x1+1,y1+1,wx-1,y2-1,furnit/2)
+            AddFurniture(index,wx+1,y1+1,x2-1,y2-1,furnit/2)
+            If housetype = 1 Then
+                MakeDoor(index,doorx,doory,Rand(-1,1))
+                RandDoor(index,x1,y1,x2,y2,(Rand(0,9)=0))
+            ElseIf housetype = 2 Then
+                MakeDoor(index,x1,Rand(y1+1,y2-1),(Rand(0,9)=0))
+                MakeDoor(index,x2,Rand(y1+1,y2-1),(Rand(0,9)=0))
+            EndIf
+        EndIf
+    Else                        'no wall
+        AddFurniture(index,x1+1,y1+1,x2-1,y2-1,furnit)
+        RandDoor(index,x1,y1,x2,y2,(Rand(0,9)=0))
+    EndIf
+End Function
+
+
+Function CreatePlaza(index,x1,y1,x2,y2)
+    If Rand(0,1) = 1 Then
+        If Rand(1,2) = 1 Then tex = tiles Else tex = diamonds
+        For j = y1 To y2
+            For i = x1 To x2
+                maps(i,j,index) = tex
+            Next i
+        Next j    
+    EndIf
+End Function
+
+
+Function CreateTownHall(index,x1,y1,x2,y2)
+    MakeWallsAndFloor(index,x1,y1,x2,y2,diamondpat)
+    xx = (x1+x2)/2
+    yy = (y1+y2)/2
+    If Rand(0,1) = 0 Then   'horizontal
+        wy1 = y1 + (y2-y1)/3
+        wy2 = y1 + (y2-y1)/3*2
+        wx  = x1 + (x2-x1)/3*Rand(1,2)
+        wx1 = x1 + Rand((x2-x1)/3,(x2-x1)/3*2)
+        wx2 = x1 + Rand((x2-x1)/3,(x2-x1)/3*2)
+        wx3 = x1 + Rand((x2-x1)/3,(x2-x1)/3*2)
+        wx4 = x1 + Rand((x2-x1)/3,(x2-x1)/3*2)
+        For i = x1 To x2
+            maps(i,wy1,index) = wall
+            maps(i,wy2,index) = wall
+            maps(i,(y1+wy1)/2,index) = wall
+            maps(i,(y2+wy2)/2,index) = wall
+        Next i
+        For j = wy1 To wy2 : maps(wx,j,index) = wall : Next j
+        For j = y1  To (y1+wy1)/2 : maps(wx1,j,index) = wall : Next j
+        For j = (y1+wy1)/2 To wy1 : maps(wx2,j,index) = wall : Next j
+        For j = wy2 To (wy2+y2)/2 : maps(wx3,j,index) = wall : Next j
+        For j = (wy2+y2)/2 To y2  : maps(wx4,j,index) = wall : Next j
+        AddFurniture(index, x1+1, y1+1, x2-1, wy1-1, Rand(20,24), diamondpat, ON)
+        AddFurniture(index, x1+1, wy2+1, x2-1, y2-1, Rand(20,24), diamondpat, ON)
+        MakeDoor(index, wx, (wy1+wy2)/2, 0, diamondpat)
+        MakeDoor(index, wx1, Rand(y1+1, (y1+wy1)/2-1) , 0, diamondpat)
+        MakeDoor(index, wx2, Rand((y1+wy1)/2+1, wy1-1), 0, diamondpat)
+        MakeDoor(index, wx3, Rand(wy2+1, (wy2+y2)/2-1), 0, diamondpat)
+        MakeDoor(index, wx4, Rand((wy2+y2)/2+1, y2-1) , 0, diamondpat)
+        MakeDoor(index, Rand(x1+1,wx1-1), (y1+wy1)/2  , 0, diamondpat)
+        MakeDoor(index, Rand(wx2+1,x2-1), (y1+wy1)/2  , 0, diamondpat)
+        MakeDoor(index, Rand(x1+1,wx3-1), (wy2+y2)/2  , 0, diamondpat)
+        MakeDoor(index, Rand(wx4+1,x2-1), (wy2+y2)/2  , 0, diamondpat)
+        If wx < xx Then
+            For i = wx+2 To x2-4 Step 3
+                maps(i,wy1+1,index) = statue
+                maps(i,wy2-1,index) = statue
+            Next i
+            maps(x2-3,yy-1 ,index) = table
+            maps(x2-3,yy   ,index) = table
+            maps(x2-3,yy+1 ,index) = table
+            maps(x2-2,yy   ,index) = lord
+            maps(x2-1,wy1+1,index) = closet
+            maps(x2-1,wy2-1,index) = closet
+            maps((x1+wx)/2,yy,index) = statue
+            MakeDoor(index,x1,yy,0,diamondpat)
+            MakeDoor(index,Rand(x1+2,wx-2),wy1,ON,diamondpat)
+            MakeDoor(index,Rand(x1+2,wx-2),wy2,ON,diamondpat)
+        Else
+            For i = x1+4 To wx-2 Step 3
+                maps(i,wy1+1,index) = statue
+                maps(i,wy2-1,index) = statue
+            Next i
+            maps(x1+3,yy-1 ,index) = table
+            maps(x1+3,yy   ,index) = table
+            maps(x1+3,yy+1 ,index) = table
+            maps(x1+2,yy   ,index) = lord
+            maps(x1+1,wy1+1,index) = closet
+            maps(x1+1,wy2-1,index) = closet
+            maps((wx+x2)/2,yy,index) = statue
+            MakeDoor(index,x2,yy,0,diamondpat)
+            MakeDoor(index,Rand(wx+2,x2-2),wy1,ON,diamondpat)
+            MakeDoor(index,Rand(wx+2,x2-2),wy2,ON,diamondpat)
+        EndIf
+    Else                    'vertical
+        wx1 = x1 + (x2-x1)/3
+        wx2 = x1 + (x2-x1)/3*2
+        wy  = y1 + (y2-y1)/3*Rand(1,2)
+        wy1 = y1 + Rand((y2-y1)/3,(y2-y1)/3*2)
+        wy2 = y1 + Rand((y2-y1)/3,(y2-y1)/3*2)
+        wy3 = y1 + Rand((y2-y1)/3,(y2-y1)/3*2)
+        wy4 = y1 + Rand((y2-y1)/3,(y2-y1)/3*2)
+        For j = y1 To y2
+            maps(wx1,j,index) = wall
+            maps(wx2,j,index) = wall
+            maps((x1+wx1)/2,j,index) = wall
+            maps((x2+wx2)/2,j,index) = wall
+        Next j
+        For i = wx1 To wx2 : maps(i,wy,index) = wall : Next i
+        For i = x1  To (x1+wx1)/2 : maps(i,wy1,index) = wall : Next i
+        For i = (x1+wx1)/2 To wx1 : maps(i,wy2,index) = wall : Next i
+        For i = wx2 To (wx2+x2)/2 : maps(i,wy3,index) = wall : Next i
+        For i = (wx2+x2)/2 To x2  : maps(i,wy4,index) = wall : Next i
+        AddFurniture(index, x1+1, y1+1, wx1-1, y2-1, Rand(20,24), diamondpat, ON)
+        AddFurniture(index, wx2+1, y1+1, x2-1, y2-1, Rand(20,24), diamondpat, ON)
+        MakeDoor(index,(wx1+wx2)/2,wy,0)
+        MakeDoor(index, Rand(x1+1, (x1+wx1)/2-1) , wy1, 0, diamondpat)
+        MakeDoor(index, Rand((x1+wx1)/2+1, wx1-1), wy2, 0, diamondpat)
+        MakeDoor(index, Rand(wx2+1, (wx2+x2)/2-1), wy3, 0, diamondpat)
+        MakeDoor(index, Rand((wx2+x2)/2+1, x2-1) , wy4, 0, diamondpat)
+        MakeDoor(index, (x1+wx1)/2, Rand(y1+1,wy1-1)  , 0, diamondpat)
+        MakeDoor(index, (x1+wx1)/2, Rand(wy2+1,y2-1)  , 0, diamondpat)
+        MakeDoor(index, (wx2+x2)/2, Rand(y1+1,wy3-1)  , 0, diamondpat)
+        MakeDoor(index, (wx2+x2)/2, Rand(wy4+1,y2-1)  , 0, diamondpat)
+        If wy < yy Then
+            For j = wy+2 To y2-4 Step 3
+                maps(wx1+1,j,index) = statue
+                maps(wx2-1,j,index) = statue
+            Next j
+            maps(xx-1 ,y2-3,index) = table
+            maps(xx   ,y2-3,index) = table
+            maps(xx+1 ,y2-3,index) = table
+            maps(xx   ,y2-2,index) = lord
+            maps(wx1+1,y2-1,index) = closet
+            maps(wx2-1,y2-1,index) = closet
+            maps(xx,(y1+wy)/2,index) = statue
+            MakeDoor(index,xx,y1,0,diamondpat)
+            MakeDoor(index,wx1,Rand(y1+2,wy-2),ON,diamondpat)
+            MakeDoor(index,wx2,Rand(y1+2,wy-2),ON,diamondpat)
+        Else
+            For j = y1+4 To wy-2 Step 3
+                maps(wx1+1,j,index) = statue
+                maps(wx2-1,j,index) = statue
+            Next j
+            maps(xx-1 ,y1+3,index) = table
+            maps(xx   ,y1+3,index) = table
+            maps(xx+1 ,y1+3,index) = table
+            maps(xx   ,y1+2,index) = lord
+            maps(wx1+1,y1+1,index) = closet
+            maps(wx2-1,y1+1,index) = closet
+            maps(xx,(wy+y2)/2,index) = statue
+            MakeDoor(index,xx,y2,0,diamondpat)
+            MakeDoor(index,wx1,Rand(wy+2,y2-2),ON,diamondpat)
+            MakeDoor(index,wx2,Rand(wy+2,y2-2),ON,diamondpat)
+        EndIf
+    EndIf
+End Function
+
+
+Function CreateInn(index,x1,y1,x2,y2)
+    MakeWallsAndFloor(index,x1,y1,x2,y2,floor)
+    If Rand(0,1) = 0 Then   'horizontal
+        yy = RoundDown((y1+y2)/2)
+        If Rand(0,1) = 0 Then
+            MakeDoor(index,x1,yy)
+            For i = x1+2 To x2-4 Step 3
+                For j = y1+2 To y2-2 Step 3
+                    maps(i,j,index) = table
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                Next j
+            Next i
+            maps(x1  ,yy-1,index) = inn
+            maps(x1  ,yy+1,index) = inn
+            maps(x2-2,yy-1,index) = table
+            maps(x2-2,yy  ,index) = table
+            maps(x2-2,yy+1,index) = table
+            maps(x2-1,y1+1,index) = barrel
+            maps(x2-1,y2-1,index) = barrel
+            If Rand(0,1) Then maps(x2-Rand(1,2),y1+Rand(1,2),index) = barrel
+            If Rand(0,1) Then maps(x2-Rand(1,2),y2-Rand(1,2),index) = barrel
+            maps(x2-3+2*Rand(1,0),yy-1+Rand(0,2),index) = innkeeper
+        Else
+            MakeDoor(index,x2,yy)
+            For i = x1+4 To x2-2 Step 3
+                For j = y1+2 To y2-2 Step 3
+                    maps(i,j,index) = table
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                Next j
+            Next i
+            maps(x2  ,yy-1,index) = inn
+            maps(x2  ,yy+1,index) = inn
+            maps(x1+2,yy-1,index) = table
+            maps(x1+2,yy  ,index) = table
+            maps(x1+2,yy+1,index) = table
+            maps(x1+1,y1+1,index) = barrel
+            maps(x1+1,y2-1,index) = barrel
+            If Rand(0,1) Then maps(x1+Rand(1,2),y1+Rand(1,2),index) = barrel
+            If Rand(0,1) Then maps(x1+Rand(1,2),y2-Rand(1,2),index) = barrel
+            maps(x1+3-2*Rand(1,0),yy-1+Rand(0,2),index) = innkeeper
+        EndIf
+    Else                    'vertical
+        xx = RoundDown((x1+x2)/2)
+        If Rand(0,1) = 0 Then
+            MakeDoor(index,xx,y1)
+            For i = x1+2 To x2-2 Step 3
+                For j = y1+2 To y2-4 Step 3
+                    maps(i,j,index) = table
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                Next j
+            Next i
+            maps(xx-1,y1  ,index) = inn
+            maps(xx+1,y1  ,index) = inn
+            maps(xx-1,y2-2,index) = table
+            maps(xx  ,y2-2,index) = table
+            maps(xx+1,y2-2,index) = table
+            maps(x1+1,y2-1,index) = barrel
+            maps(x2-1,y2-1,index) = barrel
+            If Rand(0,1) Then maps(x1+Rand(1,2),y2-Rand(1,2),index) = barrel
+            If Rand(0,1) Then maps(x2-Rand(1,2),y2-Rand(1,2),index) = barrel
+            maps(xx-1+Rand(0,2),y2-3+2*Rand(1,0),index) = innkeeper
+        Else
+            MakeDoor(index,xx,y2)
+            For i = x1+2 To x2-2 Step 3
+                For j = y1+4 To y2-2 Step 3
+                    maps(i,j,index) = table
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                    maps(i-1+2*Rand(1,0),j,index) = chair
+                    maps(i,j-1+2*Rand(1,0),index) = chair
+                Next j
+            Next i
+            maps(xx-1,y2,index)   = inn
+            maps(xx+1,y2,index)   = inn
+            maps(xx-1,y1+2,index) = table
+            maps(xx  ,y1+2,index) = table
+            maps(xx+1,y1+2,index) = table
+            maps(x1+1,y1+1,index) = barrel
+            maps(x2-1,y1+1,index) = barrel
+            If Rand(0,1) Then maps(x1+Rand(1,2),y1+Rand(1,2),index) = barrel
+            If Rand(0,1) Then maps(x2-Rand(1,2),y1+Rand(1,2),index) = barrel
+            maps(xx-1+Rand(0,2),y1+3-2*Rand(1,0),index) = innkeeper
+        EndIf
+    EndIf
+End Function
+
+
+
+Function CreateShop(index,x1,y1,x2,y2)
+    MakeWallsAndFloor(index,x1,y1,x2,y2,floor)
+    'inner wall
+    If Rand(0,1) = 0 Then   'horizontal
+        wy = Rand(y1+3,y2-3)
+        doorx = Rand(x1+1,x2-1)
+        doory = wy
+        For i = x1 To x2
+            If i<>doorx Then maps(i,wy,index) = wall
+        Next i
+        If wy < (y1+y2)/2 Then tempside = 0 Else tempside = 1
+        If tempside = 0 Then
+            AddFurniture(index,x1+1,y1+1,x2-1,wy-1,Rand(3,5))
+            For i = 1 To Rand(5,10)
+                If Rand(0,2) = 0 Then temptile = barrel Else temptile = closet_locked
+                If Rand(1,5) = 5 Then temptile = table
+                maps(Rand(x1+1,x2-1),Rand(wy+1,y2-1),index) = temptile
+            Next i
+            maps(Rand(x1+1,x2-1),Rand(wy+1,y2-1),index) = shopkeeper
+            doorx2 = Rand(x1+1,x2-1)
+            doory2 = y2
+        Else
+            AddFurniture(index,x1+1,wy+1,x2-1,y2-1,Rand(3,5))
+            For i = 1 To Rand(5,10)
+                If Rand(0,2) = 0 Then temptile = barrel Else temptile = closet_locked
+                If Rand(1,5) = 5 Then temptile = table
+                maps(Rand(x1+1,x2-1),Rand(y1+1,wy-1),index) = temptile
+            Next i
+            maps(Rand(x1+1,x2-1),Rand(y1+1,wy-1),index) = shopkeeper
+            doorx2 = Rand(x1+1,x2-1)
+            doory2 = y1
+        EndIf
+        maps(doorx2-1+2*Rand(0,1),doory2,index) = shop
+    Else                    'vertical
+        wx = Rand(x1+3,x2-3)
+        doory = Rand(y1+1,y2-1)
+        doorx = wx
+        For j = y1 To y2
+            If j<>doory Then maps(wx,j,index) = wall
+        Next j
+        If wx < (x1+x2)/2 Then tempside = 0 Else tempside = 1
+        If tempside = 0 Then
+            AddFurniture(index,x1+1,y1+1,wx-1,y2-1,Rand(3,5))
+            For i = 1 To Rand(5,10)
+                If Rand(0,2) = 0 Then temptile = barrel Else temptile = closet_locked
+                If Rand(1,5) = 5 Then temptile = table
+                maps(Rand(wx+1,x2-1),Rand(y1+1,y2-1),index) = temptile
+            Next i
+            maps(Rand(wx+1,x2-1),Rand(y1+1,y2-1),index) = shopkeeper
+            doorx2 = x2
+            doory2 = Rand(y1+1,y2-1)
+        Else
+            AddFurniture(index,wx+1,y1+1,x2-1,y2-1,Rand(3,5))
+            For i = 1 To Rand(5,10)
+                If Rand(0,2) = 0 Then temptile = barrel Else temptile = closet_locked
+                If Rand(1,5) = 5 Then temptile = table
+                maps(Rand(x1+1,wx-1),Rand(y1+1,y2-1),index) = temptile
+            Next i
+            maps(Rand(x1+1,wx-1),Rand(y1+1,y2-1),index) = shopkeeper
+            doorx2 = x1
+            doory2 = Rand(y1+1,y2-1)
+        EndIf
+        maps(doorx2,doory2-1+2*Rand(0,1),index) = shop
+    EndIf
+    MakeDoor(index,doorx,doory,1)
+    MakeDoor(index,doorx2,doory2)
+End Function
+
+
+Function CreateStable(index,x1,y1,x2,y2)
+    MakeWallsAndFloor(index,x1,y1,x2,y2,floor)
+    'inner wall
+    If Rand(0,1) = 0 Then   'horizontal wall
+        wy = Rand(y1+3,y2-3)
+        doorx = Rand(x1+1,x2-1)
+        doory = wy
+        For i = x1 To x2
+            If i<>doorx Then maps(i,wy,index) = wall
+        Next i
+        If Rand(0,1) = 0 Then
+            AddFurniture(index,x1+1,y1+1,x2-1,wy-1,Rand(3,5))
+            For i = 1 To Rand(3,10)
+                maps(Rand(x1+1,x2-1),Rand(wy+1,y2-1),index) = horsetile
+            Next i
+            stableboyX = Rand(x1+1,x2-1) : stableboyY = Rand(wy+1,y2-1)
+            doorx2 = Rand(x1+2,x2-2)
+            doory2 = y2
+        Else
+            AddFurniture(index,x1+1,wy+1,x2-1,y2-1,Rand(3,5))
+            For i = 1 To Rand(3,10)
+                maps(Rand(x1+1,x2-1),Rand(y1+1,wy-1),index) = horsetile
+            Next i
+            stableboyX = Rand(x1+1,x2-1) : stableboyY = Rand(y1+1,wy-1)
+            doorx2 = Rand(x1+2,x2-2)
+            doory2 = y1
+        EndIf
+        MakeDoor(index,doorx2  ,doory2,-1)
+        MakeDoor(index,doorx2-1,doory2,-1)
+        MakeDoor(index,doorx2+1,doory2,-1)
+        maps(doorx2-2+4*Rand(0,1),doory2,index) = stable
+    Else                    'vertical wall
+        wx = Rand(x1+3,x2-3)
+        doory = Rand(y1+1,y2-1)
+        doorx = wx
+        For j = y1 To y2
+            If j<>doory Then maps(wx,j,index) = wall
+        Next j
+        If Rand(0,1) = 0 Then
+            AddFurniture(index,x1+1,y1+1,wx-1,y2-1,Rand(3,5))
+            For i = 1 To Rand(3,10)
+                maps(Rand(wx+1,x2-1),Rand(y1+1,y2-1),index) = horsetile
+            Next i
+            stableboyX = Rand(wx+1,x2-1) : stableboyY = Rand(y1+1,y2-1)
+            doorx2 = x2
+            doory2 = Rand(y1+2,y2-2)
+        Else
+            AddFurniture(index,wx+1,y1+1,x2-1,y2-1,Rand(3,5))
+            For i = 1 To Rand(3,10)
+                maps(Rand(x1+1,wx-1),Rand(y1+1,y2-1),index) = horsetile
+            Next i
+            stableboyX = Rand(x1+1,wx-1) : stableboyY = Rand(y1+1,y2-1)            
+            doorx2 = x1
+            doory2 = Rand(y1+2,y2-2)
+        EndIf
+        MakeDoor(index,doorx2,doory2  ,-1)
+        MakeDoor(index,doorx2,doory2-1,-1)
+        MakeDoor(index,doorx2,doory2+1,-1)
+        maps(doorx2,doory2-2+4*Rand(0,1),index) = stable
+    EndIf
+    MakeDoor(index,doorx,doory,1)
+    maps(stableboyX,stableboyY,index) = stableboy
+End Function
+
+
+
+Function CreateChurch(index,x1,y1,x2,y2)
+    MakeWallsAndFloor(index,x1,y1,x2,y2,diamondpat,1)
+    If Rand(0,1) = 0 Then   'horizontal
+        yy = RoundDown((y1+y2)/2)
+        If Rand(0,1) = 0 Then
+            MakeDoor(index,x1,yy)
+            For i = x1+2 To x2-4
+                For j = y1+2 To y2-2
+                    If j <> yy Then maps(i,j,index) = chair
+                Next j
+            Next i
+            maps(x1  ,yy-1,index) = church
+            maps(x1  ,yy+1,index) = church
+            maps(x2-2,yy-1,index) = table
+            maps(x2-2,yy  ,index) = table
+            maps(x2-2,yy+1,index) = table
+            maps(x2-1,y1+1,index) = closet
+            maps(x2-1,y2-1,index) = closet
+            maps(x2  ,yy  ,index) = window
+            maps(x2-3+2*Rand(1,0),yy-1+Rand(0,2),index) = priest
+        Else
+            MakeDoor(index,x2,yy)
+            For i = x1+4 To x2-2
+                For j = y1+2 To y2-2
+                    If j <> yy Then maps(i,j,index) = chair
+                Next j
+            Next i
+            maps(x2  ,yy-1,index) = church
+            maps(x2  ,yy+1,index) = church
+            maps(x1+2,yy-1,index) = table
+            maps(x1+2,yy  ,index) = table
+            maps(x1+2,yy+1,index) = table
+            maps(x1+1,y1+1,index) = closet
+            maps(x1+1,y2-1,index) = closet
+            maps(x1  ,yy  ,index) = window
+            maps(x1+3-2*Rand(1,0),yy-1+Rand(0,2),index) = priest
+        EndIf
+        For i = x1+2 To x2-2 Step 2
+            maps(i,y1,index) = window
+            maps(i,y2,index) = window
+        Next i
+    Else                    'vertical
+        xx = RoundDown((x1+x2)/2)
+        If Rand(0,1) = 0 Then
+            MakeDoor(index,xx,y1)
+            For i = x1+2 To x2-2
+                For j = y1+2 To y2-4
+                    If i <> xx Then maps(i,j,index) = chair
+                Next j
+            Next i
+            maps(xx-1,y1  ,index) = church
+            maps(xx+1,y1  ,index) = church
+            maps(xx-1,y2-2,index) = table
+            maps(xx  ,y2-2,index) = table
+            maps(xx+1,y2-2,index) = table
+            maps(x1+1,y2-1,index) = closet
+            maps(x2-1,y2-1,index) = closet
+            maps(xx  ,y2  ,index) = window
+            maps(xx-1+Rand(0,2),y2-3+2*Rand(1,0),index) = priest
+        Else
+            MakeDoor(index,xx,y2)
+            For i = x1+2 To x2-2
+                For j = y1+4 To y2-2
+                    If i <> xx Then maps(i,j,index) = chair
+                Next j
+            Next i
+            maps(xx-1,y2,index)   = church
+            maps(xx+1,y2,index)   = church
+            maps(xx-1,y1+2,index) = table
+            maps(xx  ,y1+2,index) = table
+            maps(xx+1,y1+2,index) = table
+            maps(x1+1,y1+1,index) = closet
+            maps(x2-1,y1+1,index) = closet
+            maps(xx  ,y1  ,index) = window
+            maps(xx-1+Rand(0,2),y1+3-2*Rand(1,0),index) = priest
+        EndIf
+        For j = y1+2 To y2-2 Step 2
+            maps(x1,j,index) = window
+            maps(x2,j,index) = window
+        Next j
+    EndIf
+End Function
+
+
+
+Function AddFurniture(index,x1,y1,x2,y2,furnit,floortype=12,nobed=0)
+    furniturecount = 0
+    While furniturecount < furnit
+        RandFurnit:
+        i = Rand((x1+x2)/2,x2) : j = Rand((y1+y2)/2,y2)
+        If furniturecount < furnit*.75 Then i = Rand(x1       , (x1+x2)/2) : j = Rand((y1+y2)/2, y2)
+        If furniturecount < furnit*.50 Then i = Rand((x1+x2)/2, x2)        : j = Rand(y1       , (y1+y2)/2)
+        If furniturecount < furnit*.25 Then i = Rand(x1       , (x1+x2)/2) : j = Rand(y1       , (y1+y2)/2)
+        'i = Rand(x1,x2) : j = Rand(y1,y2)
+        If maps(i,j,index) <> floortype Then Goto RandFurnit
+        furniturecount+1
+        If (furniturecount = 1 Or Rand(1,10) = 1) And nobed = 0 Then
+            temp = 0
+            Repeat:temp+1
+                i = Rand(x1,x2-1) : j = Rand(y1,y2)
+                If temp > 30 Then Goto nospace
+            Until maps(i,j,index) = floor And maps(i+1,j,index) = floortype
+            maps(i,j,index)   = bedL
+            maps(i+1,j,index) = bedR
+            nospace:
+        ElseIf j = y1 Or j = y2 Or i = x1 Or i = x2 Then
+            If Rand(1,4) = 1 Then maps(i,j,index) = Rand(table,chair) Else maps(i,j,index) = closet
+            If maps(i,j,index) = closet And Rand(1,3) = 1 Then maps(i,j,index) = barrel
+            If maps(i,j,index) = closet And Rand(0,1) = 1 Then maps(i,j,index) = closet_locked
+        Else
+            If Rand(1,4) = 4 Then
+                maps(i,j,index) = Rand(table,chair)
+                If Rand(1,4) = 4 Then maps(i,j,index) = barrel
+            Else
+                maps(i,j,index) = table
+                rnd1 = Rand(0,1)
+                rnd2 = Rand(0,1)
+                If rnd2 = 0 Then
+                    If maps(i-1+rnd1*2,j,index)  = floortype Then
+                        maps(i-1+rnd1*2,j,index) = chair
+                    ElseIf maps(i-1+(Not rnd1)*2,j,index) = floortype Then
+                        maps(i-1+(Not rnd1)*2,j,index)    = chair
+                    ElseIf maps(i,j-1+rnd1*2,index) = floortype Then
+                        maps(i,j-1+rnd1*2,index)    = chair
+                    ElseIf maps(i,j-1+(Not rnd1)*2,index) = floortype Then
+                        maps(i,j-1+(Not rnd1)*2,index)    = chair
+                    EndIf
+                Else
+                    If maps(i,j-1+rnd1*2,index)  = floortype Then
+                        maps(i,j-1+rnd1*2,index) = chair
+                    ElseIf maps(i,j-1+(Not rnd1)*2,index) = floortype Then
+                        maps(i,j-1+(Not rnd1)*2,index)    = chair
+                    ElseIf maps(i-1+rnd1*2,j,index) = floortype Then
+                        maps(i-1+rnd1*2,j,index)    = chair
+                    ElseIf maps(i-1+(Not rnd1)*2,j,index) = floortype Then
+                        maps(i-1+(Not rnd1)*2,j,index)    = chair
+                    EndIf
+                EndIf
+                furniturecount+1
+            EndIf
+        EndIf
+    Wend
+End Function
+
+
+Function RandDoor(index,x1,y1,x2,y2,locked=0)
+    RandDoor:
+    doorx = Rand(x1+1,x2-1)
+    doory = Rand(y1+1,y2-1)
+    rnd1 = Rand(0,1)
+    If Rand(0,1) = 1 Then doorx = rnd1*x1 + (Not rnd1)*x2 Else doory = rnd1*y1 + (Not rnd1)*y2
+    If (maps(doorx-1,doory,index)>wall) + (maps(doorx+1,doory,index)>wall) + (maps(doorx,doory-1,index)>wall) + (maps(doorx,doory+1,index)>wall) => 3 Then Goto RandDoor
+    MakeDoor(index,doorx,doory,locked)
+End Function
+
+
+
+Function MakeDoor(index,doorx,doory,locked=0,floortype=12)
+    If locked = 0 Then maps(doorx,doory,index) = door
+    If locked = 1 Then maps(doorx,doory,index) = door_locked
+    If locked = -1 Or locked = 2 Then maps(doorx,doory,index) = floortype
+    If maps(doorx,doory-1,index) =  bedL  Then maps(doorx+1,doory-1,index) = floortype
+    If maps(doorx,doory-1,index) =  bedR  Then maps(doorx-1,doory-1,index) = floortype
+    If maps(doorx,doory+1,index) =  bedL  Then maps(doorx+1,doory+1,index) = floortype
+    If maps(doorx,doory+1,index) =  bedR  Then maps(doorx-1,doory+1,index) = floortype
+    If maps(doorx+1,doory,index) =  bedL  Then maps(doorx+2,doory  ,index) = floortype
+    If maps(doorx-1,doory,index) =  bedR  Then maps(doorx-2,doory  ,index) = floortype
+    If maps(doorx-1,doory,index) => table And maps(doorx-1,doory,index) < lord Then maps(doorx-1,doory,index) = floortype
+    If maps(doorx+1,doory,index) => table And maps(doorx+1,doory,index) < lord Then maps(doorx+1,doory,index) = floortype
+    If maps(doorx,doory-1,index) => table And maps(doorx,doory-1,index) < lord Then maps(doorx,doory-1,index) = floortype
+    If maps(doorx,doory+1,index) => table And maps(doorx,doory+1,index) < lord Then maps(doorx,doory+1,index) = floortype
+End Function
+
+
+Function MakeWallsAndFloor(index,x1,y1,x2,y2,floortype=12,nowindows=0,nowalls=0)
+    'floor
+    For j = y1+1 To y2-1
+        For i = x1+1 To x2-1
+            maps(i,j,index) = floortype
+        Next i
+    Next j
+    'walls
+    If nowalls = False
+        For i = x1 To x2        'horizontal
+            If Rand(1,10) = 1 And i<>x1 And i<>x2 And nowindows=0 Then maps(i,y1,index) = window Else maps(i,y1,index) = wall
+            If Rand(1,10) = 1 And i<>x1 And i<>x2 And nowindows=0 Then maps(i,y2,index) = window Else maps(i,y2,index) = wall
+        Next i
+        For j = y1 To y2        'vertical
+            If Rand(1,10) = 1 And j<>y1 And j<>y2 And nowindows=0 Then maps(x1,j,index) = window Else maps(x1,j,index) = wall
+            If Rand(1,10) = 1 And j<>y1 And j<>y2 And nowindows=0 Then maps(x2,j,index) = window Else maps(x2,j,index) = wall
+        Next j
+    EndIf
+End Function
+
+
+Function CreateVillage(index,xhouses=0,yhouses=0)
+    AddLog("#### Start: Creating village @ " + Timer())
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+
+    housesize   = 10
+    streetwidth = 5
+    offset      = 2
+    maxfurnit   = 6
+    
+    If xhouses = 0 Then xhouses = Rand(3,4)
+    If yhouses = 0 Then yhouses = Rand(3,4)
+    xsize = xhouses * (housesize+streetwidth) + streetwidth + 4
+    ysize = yhouses * (housesize+streetwidth) + streetwidth + 4
+
+    ReDim CityPlan(xhouses,yhouses)
+    ReDim BuildingPlan(5)
+    Repeat
+        BuildingPlan(1) = Rand(0,1) + Rand(0,1)             // plazas
+        BuildingPlan(2) = Rand(0,1)                         // inns
+        BuildingPlan(3) = Rand(0,1)                         // smiths/shops
+        If Rand(1,10) = 1 Then BuildingPlan(4) = 1          // churches
+        BuildingPlan(5) = Rand(0,1)                         // stables
+        total = BuildingPlan(1)+BuildingPlan(2)+BuildingPlan(3)+BuildingPlan(4)+BuildingPlan(5)
+    Until total <= xhouses * yhouses
+    For k = 1 To total
+        Repeat
+            i = Rand(1,xhouses) : j = Rand(1,yhouses)
+        Until CityPlan(i,j) = 0
+        Repeat
+            b = Rand(1,5)
+        Until BuildingPlan(b) <> 0
+        BuildingPlan(b) = BuildingPlan(b) - 1
+        CityPlan(i,j)   = b
+    Next k
+    
+    For j = 3 To ysize-2
+        For i = 3 To xsize-2
+            maps(i,j,index) = darkfloor
+        Next i
+    Next j
+
+    For j = 1 To yhouses
+        For i = 1 To xhouses
+            x1 = 2 + streetwidth + (i-1) * (housesize+streetwidth)
+            y1 = 2 + streetwidth + (j-1) * (housesize+streetwidth)
+            x2 = x1 + housesize
+            y2 = y1 + housesize
+            Select CityPlan(i,j)
+                Case 1
+                    CreatePlaza (index, x1, y1, x2, y2)
+                Case 2
+                    CreateInn   (index, x1 + Rand(0,offset/2), y1 + Rand(0,offset/2), x2 - Rand(0,offset/2), y2 - Rand(0,offset)/2)
+                Case 3
+                    CreateShop  (index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset))
+                Case 4
+                    CreateChurch(index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset))
+                Case 5
+                    CreateStable(index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset))
+                Default
+                    CreateHouse (index, x1 + Rand(0,offset), y1 + Rand(0,offset), x2 - Rand(0,offset), y2 - Rand(0,offset), Rand(4,maxfurnit), Rand(0,1))                
+            EndSelect
+        Next i
+    Next j
+    
+    exitx = Rand(3,xsize-3)
+    exity = Rand(3,ysize-3)
+    If Rand(0,1) = 1 Then exitx = Rand(0,1)*(xsize-3) +2 Else exity = Rand(0,1)*(ysize-3) +2
+    maps(exitx,exity,index) = grass
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    locs(index,5) = xhouses * yhouses + Rand(0,10)
+    If locname(index) = "" Then locname(index) = RandomPlaceName()
+    AddLog("#### End: Creating village @ " + Timer())    
+End Function
+
+
+// Caves
+
+Function CreateDungeon(index,xsize=0,ysize=0)
+    AddLog("#### Start: Creating dungeon @ " + Timer())
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+    
+    If xsize = 0 Then xsize = Rand(40,200)
+    If ysize = 0 Then ysize = Rand(40,200)
+    rooms = Rand(10,Max(10,Int((xsize*ysize)^.4)))
+    roomsize = Rand(6,8) 
+
+    For j = 1 To ysize
+        For i = 1 To xsize
+            maps(i,j,index) = wall
+        Next i
+    Next j
+    
+    Repeat
+        x = Rand(roomsize+2, xsize-roomsize-2)
+        y = Rand(roomsize+2, ysize-roomsize-2)
+    Until maps(x,y,index) = wall
+    exitx = x: exity = y
+    
+    For room = 1 To rooms
+    
+        rw = Rand(3,roomsize)
+        rh = Rand(3,roomsize)
+        xx = x - Rand(0,rw-1)
+        yy = y - Rand(0,rh-1)
+        For j = yy To yy + rh
+            For i = xx To xx + rw
+                maps(i,j,index) = floor
+            Next i
+        Next j
+        ox = x: oy = y
+    
+        Repeat
+            x = Rand(roomsize+1, xsize-roomsize-1)
+            y = Rand(roomsize+1, ysize-roomsize-1)
+        Until maps(x,y,index) = wall And Distance(x,y,ox,oy) < 30
+    
+            If x-ox>0 Then 
+                For i = ox To x
+                    maps(i,oy,index) = floor
+                Next i
+            Else
+                For i = ox To x Step -1
+                    maps(i,oy,index) = floor
+                Next i
+            EndIf
+            If y-oy>0 Then 
+                For j = oy To y
+                    maps(x,j,index) = floor
+                Next j
+            Else
+                For j = oy To y Step -1
+                    maps(x,j,index) = floor
+                Next j
+            EndIf
+    Next room
+
+    For craps = 1 To Rand(0,20)
+        Repeat
+            x = Rand(2, xsize-1)
+            y = Rand(2, ysize-1)
+        Until maps(x,y,index) = floor
+        maps(x,y,index) = rubble
+    Next craps
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    locs(index,5) = Rand(0,15) + Rand(0,1)*Rand(0,10)
+    AddLog("#### End: Creating dungeon @ " + Timer())
+End Function
+
+
+Function CreateCave(index,xsize=0,ysize=0)
+    AddLog("#### Start: Creating cave (GoL) @ " + Timer())
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+
+    If xsize = 0 Then xsize = Rand(20,200)
+    If ysize = 0 Then ysize = Rand(20,200)
+
+    For j = 2 To ysize-1
+        For i = 2 To xsize-1
+            maps(i,j,index) = floor
+        Next i
+    Next j
+
+	// generate a game of life like cave 
+    For i = 1 To Int(xsize*ysize*.55)
+        maps(Rand(1,xsize),Rand(1,ysize),index) = wall
+    Next i
+
+    For y = 2 To ysize-1
+        For x = 2 To xsize-1
+
+            count=0
+            If maps(x-1,y-1,index) = wall Then count+1
+            If maps(x  ,y-1,index) = wall Then count+1
+            If maps(x+1,y-1,index) = wall Then count+1
+            If maps(x+1,y  ,index) = wall Then count+1
+            If maps(x+1,y+1,index) = wall Then count+1
+            If maps(x  ,y+1,index) = wall Then count+1
+            If maps(x-1,y+1,index) = wall Then count+1
+            If maps(x-1,y  ,index) = wall Then count+1
+            
+            If maps(x,y,curmap) = wall Then
+                If count<4 Then maps(x,y,index) = floor
+            Else
+                If count>4 Then maps(x,y,index) = wall
+            EndIf
+            
+        Next x
+    Next y
+
+    'boundaries
+    For i = 1 To xsize
+        maps(i,1,index)     = wall
+        maps(i,ysize,index) = wall
+    Next i
+    For j = 1 To ysize
+        maps(1,j,index)     = wall
+        maps(xsize,j,index) = wall
+    Next j
+
+    'craps
+    For craps = 1 To Rand(0,20)
+        Repeat
+            x = Rand(2, xsize-1)
+            y = Rand(2, ysize-1)
+        Until maps(x,y,index) = floor
+        maps(x,y,index) = rubble
+    Next craps
+
+
+    Repeat
+        exitx = Rand(3, xsize-2)
+        exity = Rand(3, ysize-2)
+    Until maps(exitx,exity,index) = floor
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    locs(index,5) = Rand(0,15) + Rand(0,1)*Rand(0,10)
+    AddLog("#### End: Creating cave @ " + Timer())
+End Function
+
+
+Function CreateCave2(index,xsize=0,ysize=0)
+    AddLog("#### Start: Creating cave (metaballs) @ " + Timer())
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+    
+    If xsize = 0 Then xsize = Rand(20,200)
+    If ysize = 0 Then ysize = Rand(20,200)
+
+    For j = 1 To ysize
+        For i = 1 To xsize
+            maps(i,j,index) = wall
+        Next i
+    Next j
+
+    metasize = 3
+    x = xsize/2
+    y = ysize/2
+    dir = Rand(0,360)
+
+	// generate metaballs
+    For m = 1 To Int(xsize*ysize/100)
+        For ang = 0 To 360 Step 20
+            For siz = 1 To metasize
+                xx = x + Cos(ang)*siz
+                yy = y - Sin(ang)*siz
+                If xx > 1 And xx < xsize And yy > 1 And yy < ysize Then maps(xx,yy,index) = floor
+            Next siz
+        Next ang
+        newdir:
+        dir = WrapAngle(dir + Rand(-90,90))
+        x = x + Cos(dir) * metasize*.9
+        y = y - Sin(dir) * metasize*.9
+        If x < 1 Or y < 1 Or x > xsize Or y > ysize Then dir = Rand(0,360): Goto newdir
+    Next m
+
+    'boundaries
+    For i = 1 To xsize
+        maps(i,1,index) = wall
+        maps(i,ysize,index) = wall
+    Next i
+    For j = 1 To ysize
+        maps(1,j,index) = wall
+        maps(xsize,j,index) = wall
+    Next j
+
+    'craps
+    For craps = 1 To Rand(0,20)
+        Repeat
+            x = Rand(2, xsize-1)
+            y = Rand(2, ysize-1)
+        Until maps(x,y,index) = floor
+        maps(x,y,index) = rubble
+    Next craps
+
+    Repeat
+        exitx = Rand(3, xsize-2)
+        exity = Rand(3, ysize-2)
+    Until maps(exitx,exity,index) = floor
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    locs(index,5) = Rand(0,15) + Rand(0,1)*Rand(0,10)
+    AddLog("#### End: Creating cave @ " + Timer())
+End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+remstart
+
+Function ScanForSpace(index,x,y,width,height,border)
+    For j = y-border To y+height+border
+        For i = x-border To x+width+border
+            If maps(i,j,index) <> darkfloor Then Return False
+        Next i
+    Next j
+    Return True
+End Function
+
+
+
+
+Function CreateCave3(index,xsize=0,ysize=0)
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+
+    If xsize = 0 Then xsize = Rand(20,200)
+    If ysize = 0 Then ysize = Rand(20,200)
+
+    For j = 1 To ysize
+        For i = 1 To xsize
+            maps(i,j,index) = wall
+        Next i
+    Next j
+
+	// generate L-shapes
+    For l = 1 To Int(xsize*ysize*.10)
+        x = Rand(6,xsize-6)
+        y = Rand(6,ysize-6)
+'        rnd1 = Rand(-5,5)
+'        rnd2 = Rand(-5,5)
+        dir = Rand(1,4)
+        maps(x,y,index) = floor
+        Select dir
+            Case 1
+                For i = 1 To Rand(0,5)
+                    maps(x + i, y,index) = floor
+                    maps(x, y - i,index) = floor
+                Next i
+            Case 2
+                For i = 1 To Rand(0,5)
+                    maps(x + i, y,index) = floor
+                    maps(x, y + i,index) = floor
+                Next i
+            Case 3
+                For i = 1 To Rand(0,5)
+                    maps(x - i, y,index) = floor
+                    maps(x, y - i,index) = floor
+                Next i
+            Case 4
+                For i = 1 To Rand(0,5)
+                    maps(x - i, y,index) = floor
+                    maps(x, y + i,index) = floor
+                Next i
+        EndSelect
+    Next l
+    
+    'boundaries
+    For i = 1 To xsize
+        maps(i,1,index) = wall
+        maps(i,ysize,index) = wall
+    Next i
+    For j = 1 To ysize
+        maps(1,j,index) = wall
+        maps(xsize,j,index) = wall
+    Next j
+
+    Repeat
+        exitx = Rand(2, xsize-1)
+        exity = Rand(2, ysize-1)
+    Until maps(exitx,exity,index) = floor
+
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    
+    Return True
+    
+End Function
+
+
+remend
+

@@ -1,0 +1,1000 @@
+// Knight of Faith
+// AUTHOR: Tapio Vierros 2006
+// LICENSE: see LICENSE-file
+
+SCREEN 640,480,16,1
+SetWindow "Knight of Faith"
+FrameLimit 60
+seed = Timer()
+Randomize seed
+
+w = ScreenWidth()    : h = ScreenHeight()
+hw = ScreenWidth()/2 : hh = ScreenHeight()/2
+
+Print "Knight of Faith"
+Print "Technology demo 1: Field of View & Dungeon Generator (type 1)"
+Print ""
+Print "Tämä demoaa LOS-systeemiä ja tyypin 1 luolastogeneraattoria."
+Print "Nuolet liikkuu, voit vilistää minne tahdot."
+Print "Enter generoi uuden kartan."
+Print "F3 = autokartoitusvipu"
+Print "Voit myös käydä inventaariossa (numerot)."
+Print ""
+Print "Paina jotain."
+
+Const viewx      = 10
+Const viewy      = 10
+
+Const fight      = 0
+Const talk       = 1
+
+Const npc_halt   = 0
+Const npc_move   = 1
+Const npc_travel = 2
+Const npc_fight  = 3
+Const npc_chase  = 4
+
+Const f          = 11
+Const s          = 12
+Const a          = 13
+Const name       = 1
+Const desc       = 2
+
+Const sword      = 0
+Const spear      = 1
+Const bigsword   = 2
+Const dagger     = 3
+Const club       = 4
+Const axe        = 5
+Const flail      = 6
+Const horse      = 13
+Const noweapon   = 14
+Const nowpfem    = 15
+Const demonstaff = 14 //
+Const angelsword = 15 //
+
+Const npcsword   = 16
+Const npcspear   = 17
+Const npcbigsword= 18
+Const npcdagger  = 19
+Const npcclub    = 20
+Const npcaxe     = 21
+Const npcflail   = 22
+Const npchorse   = 29
+Const npcman     = 30
+Const npcwoman   = 31
+
+Const imp        = 32
+Const demon      = 33
+Const Satan      = 34 //
+
+Const grass      = 0
+Const forest     = 1
+Const hills      = 2
+Const mountains  = 3
+Const water      = 4
+Const castle1    = 5
+Const castle2    = 6
+Const castle3    = 7
+Const castle4    = 8
+Const village    = 9
+Const village2   = 10
+Const cave       = 11
+Const floor      = 12
+Const darkfloor  = 13
+Const caveexit   = 14
+Const tiles      = 15
+Const bigtiles   = 16
+Const diamonds   = 17
+Const diamondpat = 18
+Const stones     = 19
+Const wall       = 24
+Const door       = 29 : Const door_locked = 1029
+Const rubble     = 30
+Const table      = 36
+Const chair      = 37
+Const closet     = 38 : Const closet_locked = 1038
+Const barrel     = 39
+
+Const corpse     = 30
+
+Dim crx(100) As Short
+Dim cry(100) As Short
+Dim P(100)   As Float
+
+Dim st1 As String
+Dim st2 As String
+Dim st3 As String
+Dim st4 As String
+
+Dim prevst  As String
+Dim prev2st As String
+
+
+// CREATE WORLD //
+
+numMaps = 200
+Dim maxx(numMaps)          As Short
+Dim maxy(numMaps)          As Short
+Dim maps(200,200,numMaps)  As Short
+maxx(0) = 500'2000
+maxy(0) = 500'2000
+Dim world(maxx(0),maxy(0)) As Short
+
+Dim movedelays(24) As Short
+movedelays(grass)     = 100
+movedelays(forest)    = 300
+movedelays(hills)     = 500
+movedelays(mountains) = 1000
+For i = castle1 To cave
+    movedelays(i)     = 500
+Next i
+For i = floor To stones
+    movedelays(i)     = 100
+Next i
+movedelays(rubble)    = 500
+movedelays(chair)     = 500
+movedelays(corpse)    = 500
+
+
+
+
+// CREATE PLAYER //
+Global curmap
+Global hx
+Global hx
+Global item
+Global faith
+Dim strmode(1) As String
+strmode(0) = "Fight"
+strmode(1) = "Talk"
+mode       = fight
+item       = sword
+maxcond    = 3
+cond       = maxcond
+fighting   = 3
+strength   = 3
+armor      = 3
+faith      = 0
+gold       = 15
+fightdel   = 1000
+
+
+Dim locs(numMaps,10)
+curmap = 1
+newmap = CreateDungeon(curmap)
+hx     = locs(curmap,3)
+hy     = locs(curmap,4)
+
+Const emptyslot = 255
+Dim inv(9) As Byte
+For i = 1 To 9 : inv(i) = emptyslot : Next i
+inv(1) = sword
+inv(2) = Rand(1,6)
+inv(3) = Rand(1,6)
+
+Global msg$: msg = "Welcome!"
+Global msgdelay
+Global msgtimer: msgtimer = Timer()
+Const msg_error  = 100
+Const msg_bye    = 200
+Const msg_repeat = 300
+
+
+' LOS
+Const viewmaskx = 200
+Const viewmasky = 200
+Dim viewmask(viewmaskx, viewmasky) As Byte
+LOSdet# = 2.0
+LOSdist = 14
+
+
+// CREATE NPCs //
+Const NPCrange = 100
+Global numNPC: numNPC = 30
+Dim NPC(numNPC,20)
+// 0 = type
+// 1 = x
+// 2 = y
+// 3 = targetx
+// 4 = targety
+// 5 = move timer
+// 6 = move delay
+// 7 = under
+// 8 = state
+// 9 = health/condition
+// 10= personality
+// 11= fighting
+// 12= strength
+// 13= armor
+
+
+
+// LOAD INTERFACE //
+icons    = LoadAnimImage("Icons.bmp",32,32,0,16)
+bigicons = LoadAnimImage("Icons.bmp",32,32,0,16): ResizeImage bigicons, ImageWidth(bigicons)*2, ImageHeight(bigicons)*2
+imginv   = LoadImage("Inventory.png")
+font     = LoadFont("Lucida Calligraphy",20,ON)
+courier  = LoadFont("Courier New",20,ON,ON)
+
+tileset = LoadAnimImage("tiles.png",16,16,0,32)
+If tileset = 0 Then MakeError "Tilesetti ei ladattu!"
+sprites = LoadAnimImage("Sprites.bmp",16,16,0,48)
+
+SetFont font
+
+temp = Rand(0,10) + Rand(0,1)*Rand(0,10)
+For i = 1 To temp
+    Gosub SpawnImp
+Next i
+
+LOS(hx,hy,LOSdist)
+
+WaitKey
+
+// ----------- GAME LOOP ---------- //
+Repeat
+    
+    moved = False
+    Gosub Move
+    Gosub DrawWorld
+    Gosub DrawStats
+    
+    
+    If KeyDown(cbkeyF10) Then Color cbRed: Text 10,10,FPS(): Text w-100,10,hx+" "+hy: Text 10,40,"RND seed "+seed
+    If KeyHit(cbkeyF11)  Then ScreenShot "shot"+Rand(1000,9999)+".bmp"
+    If KeyHit(cbkeyF3) Then FOW = Not FOW
+    DrawScreen
+
+Forever
+
+
+
+// ----------- SUB PROGRAMS ---------- //
+
+
+// DRAW WORLD //
+DrawWorld:
+    If curmap <> 0 And moved = True Then LOS(hx,hy,LOSdist,LOSdet,FOW)
+    For j = -viewy To viewy
+        For i = -viewx To viewx
+            xx = hx + i
+            yy = hy + j
+                If xx<1 Then xx = 1
+                If yy<1 Then yy = 1
+                If xx>maxx(curmap) Then xx = maxx(curmap)
+                If yy>maxy(curmap) Then yy = maxy(curmap)
+                If viewmask(xx,yy) = 1
+                    If maps(xx,yy,curmap) < 100 Then
+                        DrawImage tileset, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)
+                    ElseIf maps(xx,yy,curmap) < 1000 Then
+                        DrawImage sprites, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)-100
+                    Else
+                        DrawImage tileset, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)-1000
+                    EndIf
+                EndIf
+        Next i
+    Next j
+    Color 0,0,0: Box hw, hh, 16,16, ON
+    spri = item
+    If riding = True Then DrawImage sprites, hw, hh, horse
+    If item = demonstaff Then spri = demon
+    If spri = emptyslot Then spri = noweapon
+    DrawImage sprites, hw, hh, spri
+   
+Return
+
+
+
+// PRINT STATS //
+DrawStats:
+    
+    SetFont font
+    Color 255,80,255
+    Text 20,80, "Condition"
+    SetFont courier
+    CenterText 75,100,String("I ",cond) + String("- ",maxcond-cond)
+
+    SetFont font
+    Color 80,248,255
+    Text 20,140, "Fighting"
+    Text 20,200, "Strength"
+    Text 20,260, "Armor"
+    SetFont courier
+    CenterText 75,160,String("I",fighting+GetStat(item,f))
+    CenterText 75,220,String("I",strength+GetStat(item,s))
+    CenterText 75,280,String("I",armor+GetStat(item,a))
+
+    SetFont font
+    Color 255,80,255
+    Text 20,320, "Faith"
+    SetFont courier
+    If faith = 0 Then
+        CenterText 75,340,"0"
+    ElseIf faith > 0 Then
+        For i = 1 To (faith - (faith Mod 10 )) / 10
+            CenterText 75,340+(i-1)*20,String("+",10)
+        Next i
+        CenterText 75,340+(i-1)*20,String("+",faith Mod 10)
+    Else
+        For i = 1 To (-faith - (-faith Mod 10 )) / 10
+            CenterText 75,340+(i-1)*20,String("-",10)
+        Next i
+        CenterText 75,340+(i-1)*20,String("-",-faith Mod 10)
+    EndIf
+
+    SetFont font
+    Color 255,80,255
+    Text 510,80, "Gold"
+    CenterText 560,100,gold
+
+    Color 255,80,255
+    Text 510,140, "Weapon"
+    If item <> emptyslot Then DrawImage icons,545,160,item
+
+    Color 255,80,255
+    Text 510,200, "Action"
+    CenterText 560,220, strmode(mode)
+    
+    Color 80,248,255
+    Text 510,260, "Inventory"
+    DrawImage imginv,510,300
+    If inv(1) <> emptyslot Then DrawImage icons,511,301,inv(1)
+    If inv(2) <> emptyslot Then DrawImage icons,544,301,inv(2)
+    If inv(3) <> emptyslot Then DrawImage icons,577,301,inv(3)
+    If inv(4) <> emptyslot Then DrawImage icons,511,334,inv(4)
+    If inv(5) <> emptyslot Then DrawImage icons,544,334,inv(5)
+    If inv(6) <> emptyslot Then DrawImage icons,577,334,inv(6)
+    If inv(7) <> emptyslot Then DrawImage icons,511,367,inv(7)
+    If inv(8) <> emptyslot Then DrawImage icons,544,367,inv(8)
+    If inv(9) <> emptyslot Then DrawImage icons,577,367,inv(9)
+    
+    If Timer() < msgtimer+msgdelay Then Color 255,80,255: CenterText hw,20,msg
+
+    If paused = True Then Color cbRed: Text w-TextWidth("PAUSED"),h-TextHeight("PAUSED"),"PAUSED"
+
+Return
+
+
+
+// KEYS & MOVEMENT //
+Move:
+
+    k = GetKey()
+    If k => 49 And k <= 57 Then
+        k = k - 48
+        If KeyDown(cbKeyLControl) And inv(k) <> emptyslot Then
+            item = inv(k)
+        ElseIf KeyDown(cbKeyLAlt) Then
+            RemoveItem(k)
+        ElseIf inv(k) <> emptyslot
+            slot = k
+            Gosub Inventory
+        EndIf
+    EndIf    
+
+    If Timer()> rec+delay Then
+        If UpKey()    Then hy-1: paused = False: moved = True
+        If DownKey()  Then hy+1: paused = False: moved = True
+        If LeftKey()  Then hx-1: paused = False: moved = True
+        If RightKey() Then hx+1: paused = False: moved = True
+        rec = Timer()
+    EndIf
+    
+    If hx < 1 Then hx = 1
+    If hy < 1 Then hy = 1
+    If hx > maxx(curmap) Then hx = maxx(curmap)
+    If hy > maxy(curmap) Then hy = maxy(curmap)
+
+    If curmap = 0 Then under = world(hx,hy) Else under = maps(hx,hy,curmap)
+    // "Collision"
+    ' furniture
+    If under = closet Or under = table Or under = barrel Then
+        If mode = talk Then
+            If Rand(1,100) = 1 Then fcoins = Rand(1,5): AddMsg("Found "+fcoins+" coins!"): gold + fcoins Else AddMsg("Nothing in there.")
+        ElseIf mode = fight Then
+            If Timer() > fighttim+fightdel Then 
+                If strength+Rand(1,6) => 6 Then maps(hx,hy,curmap) = rubble: AddMsg("You destroyed a piece of furniture!"): ClearKeys Else AddMsg("You attacked a piece of furniture!")
+            EndIf
+        EndIf
+    ' locked stuff
+    ElseIf (under = door_locked) Or (under = closet_locked) Then
+        If mode = talk Then
+            AddMsg("Locked!")
+        ElseIf mode = fight Then
+            If Timer() > fighttim+fightdel Then 
+                If strength+Rand(1,6) => 6 Then maps(hx,hy,curmap) = maps(hx,hy,curmap) - 1000: AddMsg("Lock destroyed!"): ClearKeys Else AddMsg("You attacked a lock!")
+            EndIf
+        EndIf
+    ' npcs
+    ElseIf under => 100 And under < 1000 And moved = True Then
+        For i = 1 To numNPC
+            If hx = NPC(i,1) And hy = NPC(i,2) Then Exit
+        Next i
+        If mode = fight And Timer() > fighttim+fightdel Then Gosub fight
+    EndIf
+    ' total collision
+    If IsWall(hx,hy) Then
+        hx = oldx : hy = oldy
+        If curmap = 0 Then under = world(hx,hy) Else under = maps(hx,hy,curmap)
+    EndIf
+    
+    delay = movedelays(under)
+    If under <= 1 And riding = True Then delay = delay / 3
+
+    If curmap<>0 Then
+        If hx<=1 Or hy<=1 Or hx=>maxx(curmap) Or hy=>maxy(curmap) Then ClearNPCs(): curmap = 0: hx = worldhx: hy = worldhy: Goto mapchanged
+    EndIf
+
+
+    // Enter places etc.
+    If KeyHit(cbkeyReturn) Then
+        ClearNPCs()
+        curmap + 1
+        newmap = CreateDungeon(curmap)
+        hx      = locs(curmap,3): hy      = locs(curmap,4)
+        temp = Rand(0,15) + Rand(0,1)*Rand(0,10)
+        For i = 1 To temp
+            Gosub SpawnImp
+        Next i
+        LOS(hx,hy,LOSdist)
+        Goto mapchanged
+    EndIf
+    mapchanged:
+
+    oldx = hx: oldy = hy
+
+    If faith < -25 And item <> demonstaff Then ClearInv(): inv(1) = demonstaff: item = inv(1): AddMsg("You turned into a demon!",15000)
+
+
+    If KeyHit(cbkeyInsert) Then LOSdet = 0.5
+    If KeyHit(cbkeyHome)   Then LOSdet = 1.0    
+    If KeyHit(cbkeyPgUp)   Then LOSdet = 2.0
+
+    // xiit //
+    If KeyDown(cbkeyLShift)  Then delay  = 0: moved = False
+    If KeyHit(cbkeyadd)      Then faith+1
+    If KeyHit(cbkeysubtract) Then faith-1
+    If KeyHit(cbkeymultiply) And cond < maxcond Then cond+1
+    If KeyHit(cbkeydivide)   And cond > 0       Then cond-1
+    //////////
+
+Return
+
+
+SpawnImp:
+    NPC(i,0) = Rand(imp,demon)
+    SpawnImpAgain:
+    NPC(i,1) = Rand(2,maxx(curmap)-1)
+    NPC(i,2) = Rand(2,maxy(curmap)-1)
+    If maps(NPC(i,1),NPC(i,2),curmap) <> floor Or maps(NPC(i,1),NPC(i,2),curmap) => 100 Then Goto SpawnImpAgain
+    NPC(i,7) = maps(NPC(i,1),NPC(i,2),curmap)
+    maps(NPC(i,1),NPC(i,2),curmap) = NPC(i,0) + 100
+    NPC(i,5) = Timer()
+    NPC(i,6) = 0
+    NPC(i,8) = npc_travel
+    NPC(i,9) = Rand(1,2) + (NPC(i,0)=demon)*2
+    NPC(i,10)= Rand(-3,0)+Rand(0,3)
+    NPC(i,f) = Rand(1,2) + (NPC(i,0)=demon)
+    NPC(i,s) = Rand(1,2) + (NPC(i,0)=demon)
+    NPC(i,a) = Rand(1,3) + (NPC(i,0)=demon)
+Return
+
+
+
+
+Fight:
+    If NPC(i,8) <> npc_fight  Then NPC(i,8) = npc_fight: NPC(i,5) = Timer()-500
+
+    If fighting+Rand(1,6) => NPC(i,f)+Rand(1,6) Then
+        If strength+Rand(1,6) => NPC(i,a)+Rand(1,6) Then
+            NPC(i,9) = NPC(i,9) - 1
+            AddMsg("You HIT!")
+            If NPC(i,9) <= 0 Then
+                KillNPC(i)
+                AddMsg("You killed your opponent!")
+            EndIf
+        Else
+            AddMsg("You MISSED!")
+        EndIf
+    Else
+        AddMsg("Your hit was DEFLECTED!")
+    EndIf
+    fighttim = Timer()
+Return
+
+
+
+Inventory:
+    exitinv = False
+    Repeat
+        SetFont font
+        Color 80,248,255
+        Box 152,72,336,336, OFF
+        Color 255,80,255    
+        Box 159,79,66,66, OFF
+        DrawImage bigicons,160,80,inv(slot)
+        Text 240,80,GetStat(inv(slot),name)
+        
+        RowText(GetStat(inv(slot),desc), 160, 460, 160)
+
+        Button("Use",160,360,80,30,sel=1)
+        Button("Drop",280,360,80,30,sel=2)
+        Button("Exit",400,360,80,30,sel=3)
+
+        Gosub DrawStats
+
+        k = GetKey()
+        If k => 49 And k <= 57 Then
+            k = k - 48
+            If KeyDown(cbKeyLControl) And inv(k) <> emptyslot Then
+                item = inv(k)
+            ElseIf KeyDown(cbKeyLAlt) Then
+                RemoveItem(k)
+                If k = slot Then exitinv = True
+            ElseIf inv(k) <> emptyslot
+                slot = k
+            EndIf
+        EndIf
+
+        sel = sel + KeyHit(cbKeyRight) - KeyHit(cbKeyLeft)
+        If sel < 1 Then sel = 1
+        If sel > 3 Then sel = 3
+
+        If KeyHit(cbKeyReturn) Then
+            If sel = 1 Then item = inv(slot)
+            If sel = 2 Then RemoveItem(slot): exitinv = True
+            if sel = 3 Then exitinv = True
+        EndIf
+        If KeyHit(cbkeyF11) Then ScreenShot "shot"+Rand(1000,9999)+".bmp"
+
+        DrawScreen
+    Until exitinv = True
+    ClearKeys
+Return
+
+
+
+
+// ----------- FUNCTIONS ---------- //
+
+
+// Inventory functions //
+
+
+Function RemoveItem(index)
+    tempitem = inv(index)
+    inv(index) = emptyslot
+    If item = tempitem And HasItem(tempitem) = False Then item = emptyslot
+End Function
+
+Function HasItem(iItem)
+    For i = 1 To 9
+        If inv(i) = iItem Then Return True
+    Next i
+    Return False
+End Function
+
+Function ClearInv()
+    For i = 1 To 9
+        inv(i) = emptyslot
+    Next i
+    item = emptyslot
+End Function
+
+
+Function GetStat(wp,stat)
+    If wp = sword
+        If stat = a    Then Return 1
+        If stat = name Then Return "Sword"
+        If stat = desc Then Return "A sword is a common weapon, which has a steel blade about two feet long with sharp edges and tip. It is normally accompanied with a shield for extra protection."
+    ElseIf wp = spear
+        If stat = f    Then Return 1
+        If stat = s    Then Return -1
+        If stat = name Then Return "Spear"
+        If stat = desc Then Return "A spear is a weapon with a long wooden shaft and sharp steel tip. It is easy to use, but lacks the strength of heavier weapons."
+    ElseIf wp = bigsword
+        If stat = f    Then Return -1
+        If stat = s    Then Return 1
+        If stat = name Then Return "Great sword"
+        If stat = desc Then Return "Great sword is a two-handed weapon, bigger and heavier than the normal sword. It requires strength to operate, but is deadly when a hit is delivered."
+    ElseIf wp = dagger
+        If stat = f    Then Return -1
+        If stat = s    Then Return -1
+        If stat = name Then Return "Dagger"
+        If stat = desc Then Return "Dagger is a small weapon commonly used for self-defence. As a dagger is easy to hide due its size, it is a weapon of choice for thieves."
+    ElseIf wp = club
+        If stat = f    Then Return -1
+        If stat = s    Then Return -1
+        If stat = name Then Return "Club"
+        If stat = desc Then Return "A club is a crude bludgeoning weapon that can be improvised out of about everything."
+    ElseIf wp = axe
+        If stat = f    Then Return -2
+        If stat = s    Then Return 1
+        If stat = name Then Return "Axe"
+        If stat = desc Then Return "Axe is a powerful tool when chopping wood, but in combat it lacks the agility of more sophisticated weapons."
+    ElseIf wp = flail
+        If stat = f    Then Return -2
+        If stat = s    Then Return 1
+        If stat = name Then Return "Flail"
+        If stat = desc Then Return "Flail is a steel bludgeon joined by a chain to a short wooden haft. It hits hard, but is difficult to use."
+    ElseIf wp = horse
+        If stat = f    Then Return 1
+        If stat = s    Then Return 1
+        If stat = a    Then Return 1
+        If stat = name Then Return "Horse"
+        If stat = desc Then Return "A horse gives you speed, but it cannot be ritten in caves."
+    ElseIf wp = demonstaff
+        If stat = f    Then Return 2
+        If stat = s    Then Return 1
+        If stat = name Then Return "Demonstaff"
+        If stat = desc Then Return "This is a dangerous tri-head spear used by demons and imps."
+    ElseIf wp = angelsword
+        If stat = f    Then Return 4
+        If stat = s    Then Return 4
+        If stat = name Then Return "Michael's Sword"
+        If stat = desc Then Return "The sword of the Archangel Michael is the ultimate weapon that can cut through just about everything."
+    EndIf
+    Return 0
+End Function
+
+
+
+// NPC functions
+
+Function ClearNPCs()
+    For i = 1 To numNPC
+        If NPC(i,9) > 0 Then
+            If curmap = 0 Then
+                If world(NPC(i,1),NPC(i,2))=>100 Then world(NPC(i,1),NPC(i,2)) = NPC(i,7)
+            Else
+                If maps(NPC(i,1),NPC(i,2),curmap)=>100 And maps(NPC(i,1),NPC(i,2),curmap)<1000 Then maps(NPC(i,1),NPC(i,2),curmap) = NPC(i,7)
+            EndIf
+            NPC(i,9) = 0
+        EndIf
+    Next i
+End Function
+
+
+
+Function KillNPC(index)
+    If curmap = 0 Then
+        world(NPC(index,1),NPC(index,2)) = corpse
+    Else
+        maps(NPC(index,1),NPC(index,2),curmap) = corpse
+    EndIf
+    If NPC(index,0) = imp Or NPC(index,0) = demon Or NPC(index,0) = Satan Then
+        faith+1
+    Else
+        faith-2
+    EndIf
+    NPC(index,9) = 0
+End Function
+
+
+// Field of View functions
+
+Function LOS(x,y,LOSdist=14,LOSdet#=3.0,FOW=0)
+    If FOW = False Then ReDim viewmask(viewmaskx,viewmasky)
+    For ang = 0 To Int(360 * LOSdet)
+        xx# = Float(x)
+        yy# = Float(y)
+        Repeat
+            xx = xx + Cos(ang/LOSdet)
+            yy = yy - Sin(ang/LOSdet)
+            viewmask(Int(xx),Int(yy)) = 1
+        Until BlocksView(Int(xx),Int(yy)) = True Or Distance(x,y,xx,yy) > LOSdist Or xx < x-viewx Or xx > x+viewx Or yy < y-viewy Or yy > y+viewy
+    Next ang
+End Function
+
+
+Function ShootBeam(x1,y1,x2,y2)
+    ang# = GetAngle(x1,y1,x2,y2)
+    xx# = Float(x1)
+    yy# = Float(y1)
+    Repeat
+        xx = xx + Cos(ang)
+        yy = yy - Sin(ang)
+        If BlocksView(Int(xx),Int(yy)) Or xx < 1 Or yy < 1 Or xx > maxx(curmap) Or yy > maxy(curmap) Then Return False
+    Until Distance(xx,yy,x2,y2) < 0.5
+    Return True
+End Function
+
+Function AnyoneSees(x,y,maxRange=14)
+    For i = 1 To numNPC
+        If NPC(i,9) > 0 Then
+            If ShootBeam(x,y,NPC(i,1),NPC(i,2)) And Distance(x,y,NPC(i,1),NPC(i,2)) <= maxRange Then Return True
+        EndIf
+    Next i
+    Return False
+End Function
+
+
+Function BlocksView(x,y)
+    If curmap = 0 Then under = world(x,y) Else under = maps(x,y,curmap)
+    If under = wall Or under = door_locked Then Return 1
+    Return 0
+End Function
+
+
+
+Function CreateDungeon(index,xsize=0,ysize=0)
+    
+    If xsize = 0 Then xsize = Rand(100,190)
+    If ysize = 0 Then ysize = Rand(100,190)
+    rooms = Rand(10,Max(10,Int((xsize*ysize)^.4)))
+    roomsize = Rand(6,8) 
+
+    For j = 1 To ysize
+        For i = 1 To xsize
+            maps(i,j,index) = wall
+        Next i
+    Next j
+ 
+    
+    Repeat
+        x = Rand(roomsize+1, xsize-roomsize-1)
+        y = Rand(roomsize+1, ysize-roomsize-1)
+    Until maps(x,y,index) = wall
+    exitx = x: exity = y
+    
+    For room = 1 To rooms
+    
+        rw = Rand(3,roomsize)
+        rh = Rand(3,roomsize)
+        xx = x - Rand(0,rw-1)
+        yy = y - Rand(0,rh-1)
+        For j = yy To yy + rh
+            For i = xx To xx + rw
+                maps(i,j,index) = floor
+            Next i
+        Next j
+        ox = x: oy = y
+    
+        Repeat
+            x = Rand(roomsize+1, xsize-roomsize-1)
+            y = Rand(roomsize+1, ysize-roomsize-1)
+        Until maps(x,y,index) = wall And Distance(x,y,ox,oy) < 30
+    
+            If x-ox>0 Then 
+                For i = ox To x
+                    maps(i,oy,index) = floor
+                Next i
+            Else
+                For i = ox To x Step -1
+                    maps(i,oy,index) = floor
+                Next i
+            EndIf
+            If y-oy>0 Then 
+                For j = oy To y
+                    maps(x,j,index) = floor
+                Next j
+            Else
+                For j = oy To y Step -1
+                    maps(x,j,index) = floor
+                Next j
+            EndIf
+    Next room
+
+    For craps = 1 To Rand(0,20)
+        Repeat
+            x = Rand(2, xsize-1)
+            y = Rand(2, ysize-1)
+        Until maps(x,y,index) = floor
+        maps(x,y,index) = rubble
+    Next craps
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    
+    Return True
+
+End Function
+
+
+Function CreateCave(index,xsize=0,ysize=0)
+    If xsize = 0 Then xsize = Rand(20,200)
+    If ysize = 0 Then ysize = Rand(20,200)
+
+    For j = 1 To ysize
+        For i = 1 To xsize
+            maps(i,j,index) = floor
+        Next i
+    Next j
+
+	// generate a game of life like cave 
+    For i = 1 To Int(xsize*ysize*.55)
+        maps(Rand(1,xsize),Rand(1,ysize),index) = wall
+    Next i
+
+    For y = 1 To ysize
+        For x = 1 To xsize
+
+            count=0
+            If maps(x-1,y-1,index) = wall Then count+1
+            If maps(x  ,y-1,index) = wall Then count+1
+            If maps(x+1,y-1,index) = wall Then count+1
+            If maps(x+1,y  ,index) = wall Then count+1
+            If maps(x+1,y+1,index) = wall Then count+1
+            If maps(x  ,y+1,index) = wall Then count+1
+            If maps(x-1,y+1,index) = wall Then count+1
+            If maps(x-1,y  ,index) = wall Then count+1
+            
+            If maps(x,y,curmap) = wall Then
+                If count<4 Then maps(x,y,index) = floor
+            Else
+                If count>4 Then maps(x,y,index) = wall
+            EndIf
+            
+        Next x
+    Next y
+
+    'boundaries
+    For i = 1 To xsize
+        maps(i,1,index)     = wall
+        maps(i,ysize,index) = wall
+    Next i
+    For j = 1 To ysize
+        maps(1,j,index)     = wall
+        maps(xsize,j,index) = wall
+    Next j
+
+    'craps
+    For craps = 1 To Rand(0,20)
+        Repeat
+            x = Rand(2, xsize-1)
+            y = Rand(2, ysize-1)
+        Until maps(x,y,index) = floor
+        maps(x,y,index) = rubble
+    Next craps
+
+
+    Repeat
+        exitx = Rand(2, xsize-1)
+        exity = Rand(2, ysize-1)
+    Until maps(exitx,exity,index) = floor
+
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    
+    Return True
+    
+End Function
+
+
+Function CreateCave2(index,xsize=0,ysize=0)
+    If xsize = 0 Then xsize = Rand(20,200)
+    If ysize = 0 Then ysize = Rand(20,200)
+
+    For j = 1 To ysize
+        For i = 1 To xsize
+            maps(i,j,index) = wall
+        Next i
+    Next j
+
+    metasize = 3
+    x = xsize/2
+    y = ysize/2
+    dir = Rand(0,360)
+
+	// generate metaballs
+    For m = 1 To Int(xsize*ysize/100)
+        For ang = 0 To 360 Step 20
+            For siz = 1 To metasize
+                maps(Int(x + Cos(ang)*siz), Int(y - Sin(ang)*siz), index) = floor
+            Next siz
+        Next ang
+        newdir:
+        dir = WrapAngle(dir + Rand(-90,90))
+        x = x + Cos(dir) * metasize*.9
+        y = y - Sin(dir) * metasize*.9
+        If x < 1 Or y < 1 Or x > xsize Or y > ysize Then dir = Rand(0,360): Goto newdir
+    Next m
+
+    'boundaries
+    For i = 1 To xsize
+        maps(i,1,index) = wall
+        maps(i,ysize,index) = wall
+    Next i
+    For j = 1 To ysize
+        maps(1,j,index) = wall
+        maps(xsize,j,index) = wall
+    Next j
+
+    'craps
+    For craps = 1 To Rand(0,20)
+        Repeat
+            x = Rand(2, xsize-1)
+            y = Rand(2, ysize-1)
+        Until maps(x,y,index) = floor
+        maps(x,y,index) = rubble
+    Next craps
+
+    Repeat
+        exitx = Rand(2, xsize-1)
+        exity = Rand(2, ysize-1)
+    Until maps(exitx,exity,index) = floor
+
+
+    maps(exitx,exity,index) = caveexit
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    
+    Return True
+    
+End Function
+
+
+
+Function IsWall(x,y)
+    If curmap = 0 Then under = world(x,y) Else under = maps(x,y,curmap)
+    If under = wall Or under = water Or under = table Or under = closet Or under = barrel Or (under = door_locked) Or (under = closet_locked) Or under => 100 Then Return 1
+    Return 0
+End Function
+
+Function IsWall2(under)
+    If under = wall Or under = water Or under = table Or under = closet Or under = barrel Or (under = door_locked) Or (under = closet_locked) Or under => 100 Then Return 1
+    Return 0
+End Function
+
+
+
+// MISC FUNCTIONS //
+
+
+Function Luck#()
+    Return Min(1,Rnd(1) + (faith/50)*(faith>0))
+End Function
+
+Function AddMsg(m$,mdel=4000)
+    msg = m
+    msgdelay = mdel
+    msgtimer = Timer()
+End Function
+
+// Returns the sign of given number (-1; 0; 1)
+Function Sgn(num)
+   If num>0 Then Return 1
+   If num<0 Then Return -1
+   Return 0
+End Function
+
+
+Function RowText(st$,x,x2,y,add=0)
+    startx = x
+    For i = 1 To CountWords(st$)
+       word$ = GetWord(st$,i)
+       If x + TextWidth(word$) > x2 Then
+           y = y + TextHeight(" ")
+           x = startx
+       EndIf
+       If add = ON Then
+           Locate x,y
+           AddText word$
+       Else
+           Text x,y,word$
+       EndIf
+       x = x + TextWidth(word$) + TextWidth(" ")
+    Next i
+End Function
+
+Function Button(txt$,butx,buty,butw,buth,sel)
+        Color 80,248,255
+        Box butx,buty,butw,buth,OFF
+        Color 255,80,255
+        CenterText butx+butw/2, buty+buth/2, txt, 2
+        If sel = True Then Box butx,buty,butw,buth,OFF
+End Function
+

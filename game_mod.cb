@@ -1,0 +1,367 @@
+// KofF test tool
+// AUTHOR: Tapio Vierros 2006
+// LICENSE: See LICENSE-file
+
+SCREEN 640,480,16,1
+FrameLimit 60
+DefaultMask ON,0,255,0
+
+w = ScreenWidth()    : h = ScreenHeight()
+hw = ScreenWidth()/2 : hh = ScreenHeight()/2
+
+Const viewx      = 10
+Const viewy      = 10
+
+Const map_world  = 0
+Const map_castle = 1
+Const map_village= 2
+Const map_cave   = 3
+
+Const fight      = 0
+Const talk       = 1
+
+Const npc_halt   = 0
+Const npc_move   = 1
+Const npc_travel = 2
+Const npc_fight  = 3
+Const npc_chase  = 4
+
+Const f          = 11
+Const s          = 12
+Const a          = 13
+Const name       = 1
+Const desc       = 2
+Const spd        = 3
+Const cost       = 4
+
+Const sword      = 0
+Const spear      = 1
+Const bigsword   = 2
+Const dagger     = 3
+Const club       = 4
+Const axe        = 5
+Const flail      = 6
+Const leatherarmor = 8
+Const chainmail    = 9
+Const platemail    = 10 
+
+Const horseimg   = 13
+Const noweapon   = 14
+Const nowpfem    = 15
+Const demonstaff = 14 //
+Const angelsword = 15 //
+
+Const npcsword   = 16
+Const npcspear   = 17
+Const npcbigsword= 18
+Const npcdagger  = 19
+Const npcclub    = 20
+Const npcaxe     = 21
+Const npcflail   = 22
+Const npchorse   = 29
+Const npcman     = 30
+Const npcwoman   = 31
+
+Const imp        = 32
+Const demon      = 33
+Const Satan      = 34 //
+
+Const priest     = 48
+Const shopkeeper = 49
+Const innkeeper  = 50
+Const stableboy  = 51
+
+Const grass      = 0
+Const forest     = 1
+Const hills      = 2
+Const mountains  = 3
+Const water      = 4
+Const castle1    = 5
+Const castle2    = 6
+Const castle3    = 7
+Const castle4    = 8
+Const village    = 9
+Const village2   = 10
+Const cave       = 11
+
+Const floor      = 12
+Const darkfloor  = 13
+Const caveexit   = 14
+Const tiles      = 15
+Const bigtiles   = 16
+Const diamonds   = 17
+Const diamondpat = 18
+Const stones     = 19
+Const wall       = 24
+Const church     = 25
+Const inn        = 26
+Const shop       = 27
+Const stable     = 28
+Const door       = 29 : Const door_locked = 229
+Const window     = 30
+
+Const table      = 36
+Const chair      = 37
+Const closet     = 38 : Const closet_locked = 238
+Const barrel     = 39
+Const bedL       = 40
+Const bedR       = 41
+Const statue     = 42
+Const rubble     = 43
+Const horsetile  = 44
+
+Const corpse     = 43
+
+Const cost_sword        = 50
+Const cost_spear        = 50
+Const cost_bigsword     = 90
+Const cost_dagger       = 20
+Const cost_club         = 10
+Const cost_axe          = 30
+Const cost_flail        = 40
+Const cost_leatherarmor = 100
+Const cost_chainmail    = 350
+Const cost_platemail    = 550
+Const cost_horse        = 1000
+
+
+// CREATE WORLD //
+Const maxmapsize = 200
+Dim maxx(numMaps)          'As Short
+Dim maxy(numMaps)          'As Short
+Dim maps(200,200,numMaps)  'As Short
+maxx(0) = 500'2000
+maxy(0) = 500'2000
+Dim world(maxx(0),maxy(0)) 'As Byte
+tileset = LoadAnimImage("data/tiles.bmp",16,16,0,60)
+
+Dim crx(100) As Short
+Dim cry(100) As Short
+Dim P(100)   As Float
+Dim movedelays(24) 'As Short
+
+
+Dim locs(numMaps,5)
+Dim CityPlan(20,20)  As Byte
+Dim BuildingPlan(10) As Byte
+
+
+
+' LOS
+Const viewmaskx = 200
+Const viewmasky = 200
+Dim viewmask(viewmaskx, viewmasky) As Byte
+Global LOSdet#: LOSdet  = 1.5
+Global LOSdist: LOSdist = 10
+
+// CREATE PLAYER //
+sprites = LoadAnimImage("data/Sprites.bmp",16,16,0,24)
+Global curmap
+curmap  = 0
+
+Function RandomPlaceName$()
+    If Rand(0,2) = 0 Then st3$ = GetRandWord("New,North,South,East,West,Upper,Lower,Greater,Lesser",",") + " " Else st3$ = ""
+    st1$ = GetRandWord("Silver,Peach,Pine,Birch,Willow,Mount,Rock,Water,Horn,Hollow,Red,Green,Blue,Purple,Rich,Long,Short",",")
+    st2$ = GetRandWord("ville,vale,burg,shire,hill,brook,wood,hold, Valley, Bay, Grove, Meadows, Hill, Pass, Court, Arbor, Forest, Chase, Bridge, Gate, Lake",",")
+    Return st3 + st1 + st2
+End Function
+
+
+
+Print "Map..."
+
+alku:
+'CreateDungeon(5)
+'CreateMetaCave(5)
+'CreateCastle(5)
+TestTownHall(5)
+'CreateVillage(5)
+'CreateCave(5)
+'CreateCave2(5)
+Print "Ok..."
+Print RandomPlaceName()
+WaitKey
+curmap = 5
+hx = locs(5,3): hy = locs(5,4)
+
+'LOS(hx,hy,LOSdist,LOSdet)
+moved=True
+
+Print "Ready!"
+
+// ----------- GAME LOOP ---------- //
+Repeat
+
+    Gosub Move
+    Gosub DrawWorld
+    
+    
+    Text 10,10,FPS()
+    If KeyHit(cbkeyF11) Then ScreenShot "shot"+Rand(1000,9999)+".bmp"
+    If KeyHit(cbKeyF12) Then Goto alku
+    
+    DrawScreen
+
+Forever
+
+
+
+// ----------- SUB PROGRAMS ---------- //
+
+
+// DRAW WORLD //
+DrawWorld:
+    If curmap <> 0 And moved = True And noFOV = False Then LOS(hx,hy,LOSdist,LOSdet)
+    For j = -viewy To viewy
+        For i = -viewx To viewx
+            xx = hx + i
+            yy = hy + j
+                If xx<1 Then xx = 1
+                If yy<1 Then yy = 1
+                If xx>maxx(curmap) Then xx = maxx(curmap)
+                If yy>maxy(curmap) Then yy = maxy(curmap)
+                If viewmask(xx,yy) = 1 Or noFOV = True Then 
+                    If maps(xx,yy,curmap) < 100 Then
+                        DrawImage tileset, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)
+                    ElseIf maps(xx,yy,curmap) < 200 Then
+                        DrawImage sprites, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)-100
+                    Else
+                        DrawImage tileset, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)-200
+                    EndIf
+                EndIf
+        Next i
+    Next j
+    Color 0,0,0: Box hw, hh, 16,16, ON
+    spri = item
+    If riding = True Then DrawImage sprites, hw, hh, horse
+    If item = demonstaff Then spri = demon
+    If spri = emptyslot Then spri = noweapon
+    DrawImage sprites, hw, hh, spri
+   
+Return
+
+
+
+
+// KEYS & MOVEMENT //
+Move:
+
+    moved = False
+    If Timer()> rec+delay Then
+        If UpKey()    Then hy-1: paused = False: moved = True
+        If DownKey()  Then hy+1: paused = False: moved = True
+        If LeftKey()  Then hx-1: paused = False: moved = True
+        If RightKey() Then hx+1: paused = False: moved = True
+        rec = Timer()
+    EndIf
+    
+    If hx < 1 Then hx = 1
+    If hy < 1 Then hy = 1
+    If hx > maxx(curmap) Then hx = maxx(curmap)
+    If hy > maxy(curmap) Then hy = maxy(curmap)
+
+    If IsWall(hx,hy) And noFOV = False Then hx = oldx : hy = oldy
+    'If curmap = 0 Then under = world(hx,hy) Else under = maps(hx,hy,curmap)
+    'If under  = water Or under  = wall  Then hx = oldx : hy = oldy
+    delay = 100
+
+    oldx = hx: oldy = hy
+
+    // xiit //
+    If KeyDown(cbkeyLShift)  Then delay  = 0: noFOV = True Else noFOV = False
+    //////////
+
+Return
+
+
+Include "func_world.cb"
+'Include "func_engine.cb"
+
+
+
+Function LOS(x,y,radius=14,beamfactor#=2.0,automapping=0)
+    If automapping = 0 Then ReDim viewmask(maxmapsize,maxmapsize)
+    For ang = 0 To Int(360 * beamfactor)
+        xx# = Float(x)
+        yy# = Float(y)
+        Repeat
+            xx = xx + Cos(ang/beamfactor)
+            yy = yy - Sin(ang/beamfactor)
+            'viewmask(Int(xx),Int(yy)) = 1
+            If Int(xx) > 0 And Int(yy) > 0 And Int(xx) < maxmapsize And Int(yy) < maxmapsize Then viewmask(Int(xx),Int(yy)) = 1
+        Until BlocksView(Int(xx),Int(yy)) = True Or Distance(x,y,xx,yy) > radius Or xx < x-viewx Or xx > x+viewx Or yy < y-viewy Or yy > y+viewy
+    Next ang
+End Function
+
+
+Function BlocksView(x,y)
+    If x < 1 Then x = 1
+    If y < 1 Then y = 1
+    If x > maxmapsize Then x = maxmapsize
+    If y > maxmapsize Then y = maxmapsize
+    If curmap = 0 Then under = world(x,y) Else under = maps(x,y,curmap)
+    If (under => wall And under <= stable) Or under = door_locked Then Return 1
+    Return 0
+End Function
+// Map
+
+Function IsWall(x,y)
+    If curmap = 0 Then under = world(x,y) Else under = maps(x,y,curmap)
+    If (under => wall And under <= stable) Or under = window Or under = horsetile Or under = water Or under = table Or under = closet Or under = barrel Or under = statue Or (under = door_locked) Or (under = closet_locked) Or under => 48 Or under => 100 Then Return 1
+    Return 0
+End Function
+
+Function IsWall2(under)
+    If (under => wall And under <= stable) Or under = window Or under = horsetile Or under = water Or under = table Or under = closet Or under = barrel Or under = statue Or (under = door_locked) Or (under = closet_locked) Or under => 48 Or under => 100 Then Return 1
+    Return 0
+End Function
+
+
+// Misc
+
+Function AddLog(st$,logfile$="")
+    If logfile = "" Then logfile = "test_log.txt"
+    iFile = OpenToEdit(logfile)
+        SeekFile  iFile,FileSize(logfile)
+        WriteLine iFile,st$
+    CloseFile iFile
+End Function
+
+
+
+
+
+Function TestTownHall(index,xhouses=0,yhouses=0)
+    If locs(index,10) = 0 Then locs(index,10) = Timer()
+    Randomize locs(index,10)
+
+    housesize   = 12
+    streetwidth = 5
+    offset      = 2
+    maxfurnit   = 8
+  
+    If xhouses = 0 Then xhouses = Rand(5,6)
+    If yhouses = 0 Then yhouses = Rand(5,6)
+    xsize = xhouses * (housesize+streetwidth) + streetwidth + 4
+    ysize = yhouses * (housesize+streetwidth) + streetwidth + 4
+
+
+    For j = 3 To ysize-2
+        For i = 3 To xsize-2
+            maps(i,j,index) = darkfloor
+        Next i
+    Next j
+
+    CreateTownHall(index, 10, 10, 10 + streetwidth + 2*housesize, 10 + streetwidth + 2*housesize)
+ 
+    exitx = Rand(3,xsize-3)
+    exity = Rand(3,ysize-3)
+    If Rand(0,1) = 1 Then exitx = Rand(0,1)*(xsize-3) +2 Else exity = Rand(0,1)*(ysize-3) +2
+    maps(exitx,exity,index) = grass
+    locs(index,3) = exitx
+    locs(index,4) = exity
+    maxx(index)   = xsize
+    maxy(index)   = ysize
+    locs(index,0) = True
+    locs(index,5) = xhouses * yhouses + Rand(0,20)
+End Function

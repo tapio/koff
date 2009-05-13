@@ -1,0 +1,329 @@
+// LICENSE: See LICENSE-file
+
+winmode = Int(ReadValue("Settings.ini","fullscreen"))
+If winmode = 1 Then winmode = 0 Else winmode = 1
+
+SCREEN 640,480,16,winmode
+SetWindow "Knight of Faith"
+FrameLimit 60
+SAFEEXIT OFF
+Global seed:seed = Timer():Randomize seed
+
+Global w,h,hw,hh
+w = ScreenWidth()    : h = ScreenHeight()
+hw = ScreenWidth()/2 : hh = ScreenHeight()/2
+AddLog("//// Game started @ "+ Date() +" / "+ Time() +" TIMER: "+ Timer())
+AddLog("#### Start: Loading @ " + Timer())
+
+logo = LoadImage("data/logo.png")
+DrawImage logo, hw - ImageWidth(logo) Shr 1, hh - ImageHeight(logo) Shr 1
+DrawScreen
+Wait 500
+
+Const viewx      = 10
+Const viewy      = 10
+'Global viewx, viewy
+'viewx = Int(ReadValue("Settings.ini","viewport"))
+'If viewx < 1 Or viewx > 10 Then viewx = 10
+'viewy = viewx
+
+
+Const map_world  = 0
+Const map_castle = 1
+Const map_village= 2
+Const map_cave   = 3
+
+Const fight      = 0
+Const talk       = 1
+
+Const npc_halt   = 0
+Const npc_move   = 1
+Const npc_travel = 2
+Const npc_fight  = 3
+Const npc_chase  = 4
+
+Const f          = 11
+Const s          = 12
+Const a          = 13
+Const name       = 1
+Const desc       = 2
+Const spd        = 3
+Const cost       = 4
+
+Const sword      = 0
+Const spear      = 1
+Const bigsword   = 2
+Const dagger     = 3
+Const club       = 4
+Const axe        = 5
+Const flail      = 6
+Const leatherarmor = 8
+Const chainmail    = 9
+Const platemail    = 10 
+
+Const horseimg   = 13
+Const noweapon   = 14
+Const nowpfem    = 15
+Const demonstaff = 14 //
+Const angelsword = 15 //
+
+Const npcsword   = 16
+Const npcspear   = 17
+Const npcbigsword= 18
+Const npcdagger  = 19
+Const npcclub    = 20
+Const npcaxe     = 21
+Const npcflail   = 22
+Const npchorse   = 29
+Const npcman     = 30
+Const npcwoman   = 31
+
+Const imp        = 32
+Const demon      = 33
+Const Satan      = 34 //
+
+Const priest     = 48
+Const shopkeeper = 49
+Const innkeeper  = 50
+Const stableboy  = 51
+Const lord       = 52
+
+Const grass      = 0
+Const forest     = 1
+Const hills      = 2
+Const mountains  = 3
+Const water      = 4
+Const castle1    = 5
+Const castle2    = 6
+Const castle3    = 7
+Const castle4    = 8
+Const village    = 9
+Const village2   = 10
+Const cave       = 11
+
+Const floor      = 12
+Const darkfloor  = 13
+Const caveexit   = 14
+Const tiles      = 15
+Const bigtiles   = 16
+Const diamonds   = 17
+Const diamondpat = 18
+Const stones     = 19
+Const wall       = 24
+Const church     = 25
+Const inn        = 26
+Const shop       = 27
+Const stable     = 28
+Const door       = 29 : Const door_locked = 229
+Const window     = 30
+
+Const table      = 36
+Const chair      = 37
+Const closet     = 38 : Const closet_locked = 238
+Const barrel     = 39
+Const bedL       = 40
+Const bedR       = 41
+Const statue     = 42
+Const rubble     = 43
+Const horsetile  = 44
+
+Const corpse     = 43
+
+Const cost_sword        = 50
+Const cost_spear        = 50
+Const cost_bigsword     = 90
+Const cost_dagger       = 20
+Const cost_club         = 10
+Const cost_axe          = 30
+Const cost_flail        = 40
+Const cost_leatherarmor = 100
+Const cost_chainmail    = 350
+Const cost_platemail    = 550
+Const cost_horse        = 1000
+
+Const quest_message      = 1
+Const quest_assasination = 2
+Const quest_search       = 3
+
+Dim crx(100) As Short
+Dim cry(100) As Short
+Dim P(100)   As Float
+
+Global ret As String
+Global st1 As String
+Global st2 As String
+Global st3 As String
+Global st4 As String
+Global tempint1
+Global tempint2
+
+
+// CREATE WORLD //
+Print "Creating world..."
+Const maxmapsize   = 200
+Const numForests   = 120'1600
+Const numHills     = 100'2400
+Const numMountains = 100'2400
+Const numLakes     = 50 '800
+Const numCastles   = 100'500
+Const numVillages  = 200'500
+Const numCaves     = 100'500
+Global numMaps : numMaps = numCastles+numVillages+numCaves
+Dim maxx(numMaps)                       As Short
+Dim maxy(numMaps)                       As Short
+Dim maps(maxmapsize,maxmapsize,numMaps) As Byte
+Dim ItemLayer(maxmapsize,maxmapsize)    As Byte
+maxx(0) = 500'2000
+maxy(0) = 500'2000
+Dim world(maxx(0),maxy(0))              As Byte
+tiles_4  = LoadAnimImage("data/tiles.bmp"   ,16,16,0,60)
+tiles_16 = LoadAnimImage("data/tiles_16.bmp",16,16,0,60)
+tileset = tiles_4
+
+Dim movedelays(128) As Short
+movedelays(grass)     = 100
+movedelays(forest)    = 300
+movedelays(hills)     = 500
+movedelays(mountains) = 1000
+For i = castle1 To cave
+    movedelays(i)     = 500
+Next i
+For i = floor To stones
+    movedelays(i)     = 100
+Next i
+movedelays(rubble)    = 500
+movedelays(chair)     = 500
+movedelays(bedL)      = 500
+movedelays(bedR)      = 500
+movedelays(corpse)    = 500
+
+
+Dim locs(numMaps,10) As Integer       // 1=mapx, 2=mapy, 3=exitx, 4=exity, 5=population, 6=hostility, 10=seed
+Dim locname(numMaps) As String
+Dim CityPlan(20,20)  As Byte
+Dim BuildingPlan(10) As Byte
+Global pricelevel    As Float
+
+CreateWorld()
+
+// CREATE PLAYER //
+Print "Initializing player..."
+sprites = LoadAnimImage("data/Sprites.bmp",16,16,0,48)
+Global curmap
+Global hx,hy
+Global worldhx,worldhy
+Global item,curarmor        As Byte
+Global faith
+Global cond,maxcond
+Global fighting,strength,armor
+Global mode                 As Byte
+Global gold
+Global horse,riding
+Global paused               As Byte
+Global talking,talkingto,talkingtostate
+Global prevst               As String
+Global prev2st              As String
+Global Qflag
+Global TalkObject           As String
+Global fightdel             As Short
+
+Type Quest
+    Field quest_type
+    Field status
+    Field payment
+    Field employer
+    Field destination
+End Type
+
+
+Const emptyslot = 255
+Dim inv(9) As Byte
+For i = 1 To 9 : inv(i) = emptyslot : Next i
+inv(1) = sword
+inv(2) = Rand(1,6)
+inv(3) = Rand(8,10)
+
+Dim strmode(1) As String
+strmode(0) = "Fight"
+strmode(1) = "Talk"
+mode       = talk
+item       = sword
+curarmor   = emptyslot
+maxcond    = 3
+cond       = maxcond
+fighting   = 3
+strength   = 3
+armor      = 3
+faith      = 0
+gold       = 15000
+fightdel   = 1000
+Repeat
+    hx     = Rand(.4*maxx(0), .6*maxx(0))
+    hy     = Rand(.4*maxy(0), .6*maxy(0))
+Until Not IsWall(hx,hy)
+
+
+Global msg$: msg = "Welcome!"
+Global msgdelay
+Global msgtimer: msgtimer = Timer()
+Const msg_error  = 100
+Const msg_bye    = 200
+Const msg_repeat = 300
+
+Global clock:       clock = 12
+Global clocktimer:  clocktimer = Timer()
+Global hour:        hour = 5000
+
+' LOS
+Dim viewmask(maxmapsize, maxmapsize) As Byte
+Global LOSdet#: LOSdet  = 2.0
+Global LOSdist: LOSdist = 14
+Global LOSmin#: LOSmin  = 0.5
+Global LOSmax#: LOSmax  = 2.0
+Global automap: automap = 0
+LOSfact = Int(ReadValue("Settings.ini","FOV_factor"))
+If LOSfact = 1 Then LOSmin = 0.5 : LOSmax = 1.0
+If LOSfact = 3 Then LOSmin = 1.5 : LOSmax = 2.5
+If LOSdist < 1 Or LOSdist > 14 Then LOSdist = 14
+automap = Int(ReadValue("Settings.ini","automapping"))
+If automap <> 0 Then automap = 1
+LOSdet = LOSmax
+
+// CREATE NPCs //
+Print "Initializing NPCs..."
+Global numNPC: numNPC = 30
+Const NPCrange        = 100
+Const maxNPC          = 200
+Dim NPC(maxNPC,20)
+// 0 = type
+// 1 = x
+// 2 = y
+// 3 = targetx
+// 4 = targety
+// 5 = move timer
+// 6 = move delay
+// 7 = under
+// 8 = state
+// 9 = health/condition
+// 10= personality
+// 11= fighting
+// 12= strength
+// 13= armor
+
+
+// LOAD INTERFACE //
+Print "Loading interface..."
+Global icons, bigicons, imginv, font, courier
+icons    = LoadAnimImage("data/Icons.bmp",32,32,0,16)
+bigicons = LoadAnimImage("data/Icons.bmp",32,32,0,16): ResizeImage bigicons, ImageWidth(bigicons)*2, ImageHeight(bigicons)*2
+imginv   = LoadImage("data/Inventory.png")
+font     = LoadFont("Lucida Calligraphy",20,ON)
+courier  = LoadFont("Courier New",20,ON,ON)
+
+Dim AMMUS_X#(32), AMMUS_Y#(32), AMMUS_ELOSSA(32), AMMUS_KULMA(32)
+AddLog("#### End: Loading @ " + Timer())
+Print "All done!"
+
+SetFont font
+
+Wait 10

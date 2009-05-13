@@ -1,0 +1,18 @@
+FILE: Quest_generator.txt
+
+Tyyppejä:
+
+pass:
+ * Viestin vienti
+ * Kartoitus
+ * Suojelu (paikka / henkilö)
+ * Opasta
+ * Ota selvää (jotakin kummallista on meneillään)
+ * Etsi / nouda
+
+aggr:
+ * Salamurha
+ * Kiinniotto
+ * Vakoilu
+ * Tapa hirviöitä
+ * Ristiretki?

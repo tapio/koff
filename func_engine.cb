@@ -1,0 +1,370 @@
+// LICENSE: See LICENSE-file
+
+// ----------- FUNCTIONS ---------- //
+
+
+// NPC functions
+
+Function ClearNPCs()
+    For i = 1 To maxNPC
+        If NPC(i,9) > 0 Then
+            If curmap = 0 Then
+                If world(NPC(i,1),NPC(i,2))=>100 Then world(NPC(i,1),NPC(i,2)) = NPC(i,7)
+            Else
+                If maps(NPC(i,1),NPC(i,2),curmap)=>100 And maps(NPC(i,1),NPC(i,2),curmap)<1000 Then maps(NPC(i,1),NPC(i,2),curmap) = NPC(i,7)
+            EndIf
+            NPC(i,9) = 0
+        EndIf
+    Next i
+    numNPC = 0
+End Function
+
+
+Function MoveNPC(index,xplus,yplus)
+    newx = NPC(index,1) + xplus
+    newy = NPC(index,2) + yplus
+    If IsWall(newx,newy) = False And (newx <> hx Or newy <> hy) And newx > 1 And newx < maxx(curmap) And newy > 1 And newy < maxy(curmap) Then
+        If curmap = 0 Then
+            world(NPC(index,1),NPC(index,2)) = NPC(index,7)
+            NPC(index,1) = newx
+            NPC(index,2) = newy
+            NPC(index,7) = world(newx,newy)
+            world(newx,newy) = NPC(index,0) + 100
+            NPC(index,6) = movedelays(NPC(index,7))*1.5
+        Else
+            maps(NPC(index,1),NPC(index,2),curmap) = NPC(index,7)
+            NPC(index,1) = newx
+            NPC(index,2) = newy
+            NPC(index,7) = maps(newx,newy,curmap)
+            maps(newx,newy,curmap) = NPC(index,0) + 100
+            NPC(index,6) = movedelays(NPC(index,7))*1.5
+        EndIf
+    EndIf
+    NPC(index,5) = Timer()
+End Function
+
+
+Function KillNPC(index)
+    If curmap = 0 Then
+        world(NPC(index,1),NPC(index,2)) = corpse
+    Else
+        maps(NPC(index,1),NPC(index,2),curmap) = corpse
+    EndIf
+    If NPC(index,0) = imp Or NPC(index,0) = demon Or NPC(index,0) = Satan Then
+        faith+1
+    Else
+        faith-2
+    EndIf
+    NPC(index,9) = 0
+End Function
+
+
+
+Function NewDest(index)
+    If GetMapType() = map_world Then
+        target = Rand(1,numCastles+numVillages)
+        NPC(index,3) = locs(target,1)
+        NPC(index,4) = locs(target,2)
+    EndIf
+End Function
+
+Function SpawnNPC(index)
+    If curmap = map_world Then
+        If Rand(1,3) = 1 Then NPC(index,0) = Rand(npcman,npcwoman) Else NPC(index,0) = Rand(npcsword,npcflail)
+        SpawnAgain:
+        NPC(index,1) = Rand(Max(1,hx-NPCrange),Min(hx+NPCrange,maxx(0)))
+        NPC(index,2) = Rand(Max(1,hy-NPCrange),Min(hy+NPCrange,maxy(0)))
+        If Distance(NPC(index,1),NPC(index,2),hx,hy) <= 2*Max(viewx,viewy) Or IsWall(NPC(index,1),NPC(index,2)) Then Goto SpawnAgain
+        NPC(index,7) = world(NPC(index,1),NPC(index,2))
+        world(NPC(index,1),NPC(index,2)) = NPC(index,0) + 100
+        NewDest(index)
+        NPC(index,8) = npc_travel
+        NPC(index,9) = Rand(1,2) + (NPC(index,0)=>npcman)
+        NPC(index,10)= Rand(-3,0)+Rand(0,3)
+        NPC(index,f) = Rand(1,3)
+        NPC(index,s) = Rand(1,3)
+        NPC(index,a) = Rand(1,3)
+    ElseIf GetMapType() = map_cave
+        NPC(index,0) = Rand(imp,demon)
+        SpawnImpAgain:
+        NPC(index,1) = Rand(2,maxx(curmap)-1)
+        NPC(index,2) = Rand(2,maxy(curmap)-1)
+        If IsWall(NPC(index,1),NPC(index,2)) Then Goto SpawnImpAgain
+        NPC(index,7) = maps(NPC(index,1),NPC(index,2),curmap)
+        maps(NPC(index,1),NPC(index,2),curmap) = NPC(index,0) + 100
+        NPC(index,8) = npc_travel
+        NPC(index,9) = Rand(1,2) + (NPC(index,0)=demon)*2
+        NPC(index,10)= Rand(-3,0)+Rand(0,3)
+        NPC(index,f) = Rand(1,2) + (NPC(index,0)=demon)
+        NPC(index,s) = Rand(1,2) + (NPC(index,0)=demon)
+        NPC(index,a) = Rand(1,3) + (NPC(index,0)=demon)    
+    Else
+        If Rand(1,3) = 1 Then NPC(index,0) = Rand(npcsword,npcspear) Else NPC(index,0) = Rand(npcman,npcwoman)
+        If GetMapType() = map_castle And Rand(1,8) = 1 Then NPC(index,0) = sword
+        SpawnVillagerAgain:
+        NPC(index,1) = Rand(4,maxx(curmap)-3)
+        NPC(index,2) = Rand(4,maxy(curmap)-3)
+        If IsWall(NPC(index,1),NPC(index,2)) Then Goto SpawnVillagerAgain
+        NPC(index,7) = maps(NPC(index,1),NPC(index,2),curmap)
+        maps(NPC(index,1),NPC(index,2),curmap) = NPC(index,0) + 100
+        NewDest(index)
+        NPC(index,8) = npc_move /////////////////
+        NPC(index,9) = Rand(1,2) + (NPC(index,0)=>npcman)
+        NPC(index,10)= Rand(-3,0)+Rand(0,3)
+        NPC(index,f) = Rand(1,3)
+        NPC(index,s) = Rand(1,3)
+        NPC(index,a) = Rand(1,3)
+    EndIf
+
+    NPC(index,5) = Timer()
+    NPC(index,6) = 0
+End Function
+
+
+
+Function InitTalk(index)
+manne=0
+    If locs(curmap,6) = False And faith > -20 Then 
+        talking = True
+        talkingto = index
+        If talkingto > 0 Then
+            talkingtostate = NPC(talkingto,8)
+            NPC(talkingto,8) = npc_halt
+            AddMsg(GetGenericLine(Sgn(NPC(talkingto,10))),15000)
+        ElseIf talkingto < 0
+            AddMsg(GetGenericLine(1),15000)
+        EndIf
+    Else
+        AddMsg(GetGenericLine(-1),15000)
+    EndIf
+manne=0    
+End Function
+
+
+Function EndTalk()
+    NPC(talkingto,8) = talkingtostate
+    talking    = False
+    talkingto  = 0 
+    Qflag      = False
+    TalkObject = ""
+    AddMsg("",0)
+    CloseInput
+End Function
+
+
+
+// Field of View functions
+
+Function LOS(x,y,radius=14,beamfactor#=2.0,automapping=0)
+    If automapping = 0 Then ReDim viewmask(maxmapsize,maxmapsize)
+    For ang = 0 To Int(360 * beamfactor)
+        xx# = Float(x)
+        yy# = Float(y)
+        Repeat
+            xx = xx + Cos(ang/beamfactor)
+            yy = yy - Sin(ang/beamfactor)
+            'viewmask(Int(xx),Int(yy)) = 1
+            If Int(xx) > 0 And Int(yy) > 0 And Int(xx) < maxmapsize And Int(yy) < maxmapsize Then viewmask(Int(xx),Int(yy)) = 1
+        Until BlocksView(Int(xx),Int(yy)) = True Or Distance(x,y,xx,yy) > radius Or xx < x-viewx Or xx > x+viewx Or yy < y-viewy Or yy > y+viewy
+    Next ang
+End Function
+
+
+Function ShootBeam(x1,y1,x2,y2)
+    ang# = GetAngle(x1,y1,x2,y2)
+    xx# = Float(x1)
+    yy# = Float(y1)
+    Repeat
+        xx = xx + Cos(ang)
+        yy = yy - Sin(ang)
+        If BlocksView(Int(xx),Int(yy)) Or xx < 1 Or yy < 1 Or xx > maxx(curmap) Or yy > maxy(curmap) Then Return False
+    Until Distance(xx,yy,x2,y2) < 0.5
+    Return True
+End Function
+
+Function AnyoneSees(x,y,maxRange=14)
+    For i = 1 To maxNPC
+        If NPC(i,9) > 0 Then
+            If ShootBeam(x,y,NPC(i,1),NPC(i,2)) And Distance(x,y,NPC(i,1),NPC(i,2)) <= maxRange Then Return True
+        EndIf
+    Next i
+    Return False
+End Function
+
+
+Function BlocksView(x,y)
+    If x < 1 Then x = 1
+    If y < 1 Then y = 1
+    If x > maxmapsize Then x = maxmapsize
+    If y > maxmapsize Then y = maxmapsize
+    If curmap = 0 Then under = world(x,y) Else under = maps(x,y,curmap)
+    If (under => wall And under <= stable) Or under = door_locked Then Return 1
+    Return 0
+End Function
+
+// Map
+
+Function IsWall(x,y)
+    If curmap = 0 Then under = world(x,y) Else under = maps(x,y,curmap)
+    If (under => wall And under <= stable) Or under = window Or under = horsetile Or under = water Or under = table Or under = closet Or under = barrel Or under = statue Or (under = door_locked) Or (under = closet_locked) Or under => 48 Or under => 100 Then Return 1
+    Return 0
+End Function
+
+Function IsWall2(under)
+    If (under => wall And under <= stable) Or under = window Or under = horsetile Or under = water Or under = table Or under = closet Or under = barrel Or under = statue Or (under = door_locked) Or (under = closet_locked) Or under => 48 Or under => 100 Then Return 1
+    Return 0
+End Function
+
+
+Function GetMapType()
+    If curmap = 0 Then
+        Return map_world
+    ElseIf curmap <= numCastles
+        Return map_castle
+    ElseIf curmap <= numCastles+numVillages
+        Return map_village
+    ElseIf curmap <= numCastles+numVillages+numCaves
+        Return map_cave
+    EndIf
+    Return -1
+End Function
+
+Function GetNearbyTown(x,y,towntype=1,maxRange=100)
+    For i = 1 To 100000
+        If towntype = 0 Then j = Rand(1, numCastles+numVillages+numCaves)
+        If towntype = 1 Then j = Rand(1, numCastles+numVillages)
+        If towntype = 2 Then j = Rand(1, numCastles)
+        If Distance(x,y,locs(j,1),locs(j,2)) <= maxRange Then Return j
+    Next i
+    Return j
+End Function
+
+Function GetDirection$(x,y,xx,yy)
+    ang# = GetAngle(x,y,xx,yy)
+    If ang => 22.5 And ang < 67.5   Then Return "northeast"
+    If ang => 67.5 And ang < 112.5  Then Return "north"
+    If ang => 112.5 And ang < 157.5 Then Return "northwest"
+    If ang => 157.5 And ang < 202.5 Then Return "west"
+    If ang => 202.5 And ang < 247.5 Then Return "southwest"
+    If ang => 247.5 And ang < 292.5 Then Return "south"
+    If ang => 292.5 And ang < 337.5 Then Return "southeast"
+    Return "east"
+End Function
+
+
+Function EnterPlace()
+    AddLog("#### Start: Entering place...")
+    For i = 1 To numMaps
+        If hx = locs(i,1) And hy = locs(i,2) Then
+            ClearNPCs()
+            worldhx = hx
+            worldhy = hy
+            curmap  = i
+
+            If GetMapType() = map_castle Then    
+                If locs(i,0) = False Then CreateCastle(i)
+                AddMsg("Entering " + locname(i) + ".")
+            ElseIf GetMapType() = map_village Then
+                If locs(i,0) = False Then CreateVillage(i)
+                AddMsg("Entering " + locname(i) + ".")
+            ElseIf GetMapType() = map_cave Then
+                If locs(i,0) = False Then
+                    rnd1 = Rand(1,5)
+                    If rnd1 = 5 Then
+                        CreateCave(i)
+                    ElseIf rnd1 = 4 Then
+                        CreateCave2(i)
+                    Else
+                        CreateDungeon(i)
+                    EndIf
+                EndIf
+                mode   = fight
+                riding = False
+            EndIf
+
+            numNPC = locs(i,5)
+            For j = 1 To numNPC
+                SpawnNPC(j)
+            Next j
+
+            hx = locs(i,3)
+            hy = locs(i,4)
+            LOS(hx,hy,LOSdist,LOSdet,automap)
+
+            'Goto mapchanged
+            AddLog("#### End: Entering place (type: " + GetMapType()+ ")")
+            Exit
+        EndIf
+    Next i
+    pricelevel = Rnd(0.7,1.3)
+    'mapchanged:
+End Function
+
+
+
+Function DrawStats()  
+    SetFont font
+    Color 255,80,255
+    Text 20,80, "Condition"
+    SetFont courier
+    CenterText 75,100,String("I ",cond) + String("- ",maxcond-cond)
+
+    SetFont font
+    Color 80,248,255
+    Text 20,140, "Fighting"
+    Text 20,200, "Strength"
+    Text 20,260, "Armour"
+    SetFont courier
+    CenterText 75,160,String("I",fighting+GetStat(item,f)+GetStat(curarmor,f)+GetStat(riding*horseimg,f))
+    CenterText 75,220,String("I",strength+GetStat(item,s)+GetStat(curarmor,s)+GetStat(riding*horseimg,s))
+    CenterText 75,280,String("I",armor   +GetStat(item,a)+GetStat(curarmor,a)+GetStat(riding*horseimg,a))
+
+    SetFont font
+    Color 255,80,255
+    Text 20,320, "Faith"
+    SetFont courier
+    If faith = 0 Then
+        CenterText 75,340,"0"
+    ElseIf faith > 0 Then
+        For i = 1 To (faith - (faith Mod 10 )) / 10
+            CenterText 75,340+(i-1)*20,String("+",10)
+        Next i
+        CenterText 75,340+(i-1)*20,String("+",faith Mod 10)
+    Else
+        For i = 1 To (-faith - (-faith Mod 10 )) / 10
+            CenterText 75,340+(i-1)*20,String("-",10)
+        Next i
+        CenterText 75,340+(i-1)*20,String("-",-faith Mod 10)
+    EndIf
+
+    SetFont font
+    Color 255,80,255
+    Text 510,80, "Gold"
+    CenterText 560,100,gold
+
+    Color 255,80,255
+    Text 510,140, "Weapon"
+    If item     <> emptyslot Then DrawImage icons,545,160,item
+    If curarmor <> emptyslot Then DrawImage icons,580,160,curarmor
+
+    Color 255,80,255
+    Text 510,200, "Action"
+    CenterText 560,220, strmode(mode)
+    
+    Color 80,248,255
+    Text 510,260, "Inventory"
+    DrawImage imginv,510,300
+    If inv(1) <> emptyslot Then DrawImage icons,511,301,inv(1)
+    If inv(2) <> emptyslot Then DrawImage icons,544,301,inv(2)
+    If inv(3) <> emptyslot Then DrawImage icons,577,301,inv(3)
+    If inv(4) <> emptyslot Then DrawImage icons,511,334,inv(4)
+    If inv(5) <> emptyslot Then DrawImage icons,544,334,inv(5)
+    If inv(6) <> emptyslot Then DrawImage icons,577,334,inv(6)
+    If inv(7) <> emptyslot Then DrawImage icons,511,367,inv(7)
+    If inv(8) <> emptyslot Then DrawImage icons,544,367,inv(8)
+    If inv(9) <> emptyslot Then DrawImage icons,577,367,inv(9)
+
+    If Timer() < msgtimer+msgdelay Then Color 255,80,255: RowText(msg,40,600,20,ON)
+
+    If paused = True Then Color 255,80,255: Text w-TextWidth("PAUSED"),h-TextHeight("PAUSED"),"PAUSED"
+End Function

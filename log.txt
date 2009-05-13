@@ -1,0 +1,1991 @@
+//// Game started @ 09 Jul 2006 / 14:29:29 TIMER: 7580973
+#### Start: Loading @ 7580974
+#### Start: Creating castle @ 7582788
+#### End: Creating castle @ 7582879
+#### End: Loading @ 7583104
+Msg: What is it?
+Msg: 
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Nothing in there.
+Msg: At your service.
+>>>> i want a sword
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can sell you a sword and shield combination for 64 gold. 'Ok' is the magic word...
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Enjoy it!
+Msg: Locked!
+Msg: 
+Msg: 
+#### Start: Creating castle @ 7613426
+#### End: Creating castle @ 7613506
+Msg: 
+Msg: 
+#### Start: Creating castle @ 7647213
+#### End: Creating castle @ 7647284
+Msg: How may I help?
+>>>> i want a horse
+#### Start: Special Parser
+#### End: Special Parser
+Msg: The price of a horse is 888 gold. 'Ok' is the magic word...
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Come back anytime.
+Msg: Is there anything I could do for you, sir?
+>>>> i sell horse
+#### Start: Special Parser
+Msg: No can do, it's a used one!
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Would you mind getting to bussiness?
+>>>> exit
+#### Start: Special Parser
+Msg: 
+Msg: Bye, bye.
+//// Game ended @ 09 Jul 2006 / 14:30:59 TIMER: 7671050
+//// Game started @ 09 Jul 2006 / 14:49:29 TIMER: 8781128
+#### Start: Loading @ 8781154
+#### Start: Creating castle @ 8783569
+#### End: Creating castle @ 8783660
+#### End: Loading @ 8783895
+Msg: What can I do for you?
+>>>> i want to buy a spear
+#### Start: Special Parser
+#### End: Special Parser
+Msg: A spear costs you 50 gold. Just say 'ok' if you are interested.
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Have a nice day!
+Msg: Excellent day, sir!
+>>>> i want to sell a dagger
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I give you 15 gold. Just say 'ok' and we have a deal.
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Come back if you have more to sell!
+Msg: Good day, sir!
+>>>> horse
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Would you mind getting to bussiness?
+>>>> i want a horse
+#### Start: Special Parser
+#### End: Special Parser
+Msg: A horse costs you 999 gold. Just say 'ok' and we have a deal.
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Have a nice day!
+//// Game ended @ 09 Jul 2006 / 14:50:25 TIMER: 8837402
+//// Game started @ 22 Jul 2006 / 09:08:27 TIMER: 815196
+#### Start: Loading @ 815219
+#### Start: Creating castle @ 817034
+#### End: Creating castle @ 817118
+#### End: Loading @ 817336
+Msg: 
+Msg: 
+Msg: What can I do for you?
+Msg: 
+Msg: Is there anything I could do for you, sir?
+>>>> i want a spear
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can sell you a spear for 51 gold. Say 'ok' to buy it!
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Have a nice day!
+//// Game ended @ 22 Jul 2006 / 09:09:08 TIMER: 856149
+//// Game started @ 22 Jul 2006 / 09:13:26 TIMER: 1114444
+#### Start: Loading @ 1114466
+#### Start: Creating castle @ 1116397
+#### End: Creating castle @ 1116515
+#### End: Loading @ 1116730
+//// Game started @ 25 Aug 2006 / 09:58:40 TIMER: 2665763
+#### Start: Loading @ 2665784
+#### Start: Creating world @ 2666763
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 2668703
+#### End: Loading @ 2669456
+//// Game started @ 25 Aug 2006 / 10:27:20 TIMER: 4386352
+#### Start: Loading @ 4386384
+#### Start: Creating world @ 4387677
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4390219
+#### End: Loading @ 4391076
+#### Start: Entering place...
+#### Start: Creating village @ 4394958
+#### End: Creating village @ 4394969
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 4410126
+#### End: Creating castle @ 4410203
+#### End: Entering place (type: 1)
+Msg: Excellent day, sir!
+Msg: 
+Msg: Is there anything I could do for you, sir?
+Msg: 
+Msg: Excellent day, sir!
+>>>> i want to get a weapon
+#### Start: Special Parser
+#### End: Special Parser
+Msg: My stock is wide, somake your pick.
+>>>> i wish to buy an axe
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can sell you an axe for 23 gold. Just say 'ok' if you are interested.
+>>>> can i buy an ax
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can sell you an axe for 23 gold. 'Ok' is the magic word...
+>>>> is it possible for me to get an axe here
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can sell you an axe for 23 gold. Just say 'ok' if you are interested.
+>>>> sell me an axe please
+#### Start: Special Parser
+#### End: Special Parser
+Msg: The price of an axe is 23 gold. 'Ok' is the magic word...
+>>>> i want an axe
+#### Start: Special Parser
+#### End: Special Parser
+Msg: The price of an axe is 23 gold. Just say 'ok' and we have a deal.
+>>>> i want weapons
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I sell many kinds of weapons, somake your choice.
+>>>> sword
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can sell you a sword and shield combination for 39 gold. Just say 'ok' if you are interested.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye.
+Msg: Can I help thee?
+Msg: 
+Msg: Can I help thee?
+Msg: 
+Msg: What do you want?
+Msg: 
+Msg: What can I do for you?
+Msg: 
+Msg: Excellent day, sir!
+>>>> i want to make a money donation to the church
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can erase all your sins! Just tell me how much gold you are willing to donate.
+>>>> i want to give money
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can erase all your sins! Just tell me how much gold you are willing to donate.
+>>>> 100
+#### Start: Special Parser
+#### End: Special Parser
+Msg: All your sins are now erased! (Or at least some of them...)
+>>>> give money
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can erase all your sins! Just tell me how much gold you are willing to donate.
+>>>> 14400
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You are now free of sins! (Or maybe not completely, but...)
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Godspeed!
+Msg: How may I help?
+Msg: 
+//// Game started @ 05 Nov 2006 / 14:04:24 TIMER: 2518920
+#### Start: Loading @ 2518937
+#### Start: Creating world @ 2519832
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 2521706
+#### End: Loading @ 2522388
+#### Start: Entering place...
+#### Start: Creating castle @ 2534176
+#### End: Creating castle @ 2534276
+#### End: Entering place (type: 1)
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: How may I help?
+>>>> i want a drink
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Drink? 'Ok' is the magic word...
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Let me know if you want another one.
+>>>> ruuvimeisseli
+#### Start: Special Parser
+#### End: Special Parser
+Msg: This one's on the house!
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye, bye.
+Msg: Good day, sir!
+>>>> good day
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Hello.
+>>>> who are thee
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Sorry, I missed that.
+>>>> who are you
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I am a lord of this castle.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Maybe we'll bump into each other again.
+//// Game started @ 18 Mar 2007 / 18:24:20 TIMER: 4114314
+#### Start: Loading @ 4114356
+#### Start: Creating world @ 4116399
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4118388
+#### End: Loading @ 4120543
+#### Start: Entering place...
+#### Start: Creating cave (metaballs) @ 4143759
+#### End: Creating cave @ 4143833
+#### End: Entering place (type: 3)
+Msg: You HIT!
+Msg: You HIT!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent MISSED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+#### Start: Entering place...
+#### Start: Creating castle @ 4302102
+#### End: Creating castle @ 4302192
+#### End: Entering place (type: 1)
+Msg: You destroyed a piece of furniture!
+Msg: At your service.
+>>>> i want an indulgence
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I can erase all your sins! Just tell me how much gold you are willing to donate.
+>>>> 500
+#### Start: Special Parser
+#### End: Special Parser
+Msg: All your sins are now erased! (Or at least some of them...)
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye, bye.
+Msg: Nothing in there.
+Msg: At your service.
+>>>> hello
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Hello.
+>>>> how are you
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Same old, same old.
+>>>> any quests
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Are you interested?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You would get 49 gold for delivering a message to a nearby town, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Pardon me?
+>>>> quest
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I could use a courier. Are you interested?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 95 gold, if you deliver a message to a nearby town, ok?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You are repeating yourself!
+>>>> quest
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Does that sound good?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 74 gold, if you deliver a message to a nearby town, ok?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Cut the crab.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bless you.
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: You attacked a lock!
+Msg: Lock destroyed!
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Good day, sir!
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: At your service.
+>>>> ruuvimeisseli
+#### Start: Special Parser
+#### End: Special Parser
+Msg: This one's on the house!
+>>>> ruuvimeisseli
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You are repeating yourself!
+>>>> hello
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Greetings to you!
+>>>> cup of coffee
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Speak clearly.
+>>>> i need a drink
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Drink? 'Ok' is the magic word...
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Have fun!
+Msg: 
+//// Game started @ 19 Mar 2007 / 14:24:51 TIMER: 1227753
+#### Start: Loading @ 1227805
+#### Start: Creating world @ 1228890
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 1231851
+#### End: Loading @ 1232660
+//// Game started @ 19 Mar 2007 / 14:27:03 TIMER: 1360115
+#### Start: Loading @ 1360136
+#### Start: Creating world @ 1361144
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 1363497
+#### End: Loading @ 1363950
+#### Start: Entering place...
+#### Start: Creating castle @ 1366924
+#### End: Creating castle @ 1367024
+Msg: Entering .
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating village @ 1371926
+#### End: Creating village @ 1371939
+Msg: Entering .
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating village @ 1379932
+#### End: Creating village @ 1379946
+Msg: Entering .
+#### End: Entering place (type: 2)
+//// Game started @ 19 Mar 2007 / 14:36:38 TIMER: 1934621
+#### Start: Loading @ 1934694
+#### Start: Creating world @ 1935635
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 1938054
+//// Game started @ 19 Mar 2007 / 14:38:57 TIMER: 2074025
+#### Start: Loading @ 2074084
+#### Start: Creating world @ 2075131
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 2077382
+#### End: Loading @ 2077897
+//// Game started @ 19 Mar 2007 / 15:10:04 TIMER: 3940739
+#### Start: Loading @ 3940783
+#### Start: Creating world @ 3941757
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 3943910
+#### End: Loading @ 3944352
+//// Game started @ 19 Mar 2007 / 15:11:26 TIMER: 4023025
+#### Start: Loading @ 4023090
+#### Start: Creating world @ 4024075
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4026160
+#### End: Loading @ 4026603
+#### Start: Entering place...
+#### Start: Creating castle @ 4030081
+#### End: Creating castle @ 4030178
+Msg: Entering Peachvale.
+#### End: Entering place (type: 1)
+Msg: Good day, sir!
+>>>> job
+#### Start: Special Parser
+//// Game started @ 19 Mar 2007 / 15:12:56 TIMER: 4112821
+#### Start: Loading @ 4112822
+#### Start: Creating world @ 4113774
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4115911
+#### End: Loading @ 4116397
+#### Start: Entering place...
+#### Start: Creating castle @ 4126013
+#### End: Creating castle @ 4126114
+Msg: Entering South Hollow Pass.
+#### End: Entering place (type: 1)
+Msg: Can I help thee?
+Msg: 
+Msg: What can I do for you?
+Msg: 
+Msg: Excellent day, sir!
+>>>> job
+#### Start: Special Parser
+//// Game started @ 19 Mar 2007 / 15:14:23 TIMER: 4200566
+#### Start: Loading @ 4200568
+#### Start: Creating world @ 4201527
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4203728
+#### End: Loading @ 4204529
+#### Start: Entering place...
+#### Start: Creating castle @ 4209558
+#### End: Creating castle @ 4209662
+Msg: Entering South Hollow Meadows.
+#### End: Entering place (type: 1)
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: What can I do for you?
+>>>> job
+#### Start: Special Parser
+//// Game started @ 19 Mar 2007 / 15:15:45 TIMER: 4281886
+#### Start: Loading @ 4281945
+#### Start: Creating world @ 4282920
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4285124
+#### End: Loading @ 4285568
+#### Start: Entering place...
+#### Start: Creating village @ 4288386
+#### End: Creating village @ 4288400
+Msg: Entering Longwood.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 4299587
+#### End: Creating castle @ 4299691
+Msg: Entering Peach Lake.
+#### End: Entering place (type: 1)
+Msg: Can I help thee?
+Msg: 
+Msg: |
+Msg: 
+Msg: |
+Msg: 
+Msg: Good day, sir!
+Msg: 
+Msg: Is there anything I could do for you, sir?
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Excellent day, sir!
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Are you interested?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You would get 104 gold for delivering a message to a nearby town called , ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come collect your payment when you're done.
+Msg: 
+//// Game started @ 19 Mar 2007 / 15:23:49 TIMER: 4766227
+#### Start: Loading @ 4766274
+#### Start: Creating world @ 4767258
+#### Creating forests...
+#### Creating hills...
+//// Game started @ 19 Mar 2007 / 15:25:34 TIMER: 4871302
+#### Start: Loading @ 4871361
+#### Start: Creating world @ 4872336
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+//// Game started @ 19 Mar 2007 / 15:26:41 TIMER: 4938140
+#### Start: Loading @ 4938141
+#### Start: Creating world @ 4939471
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 4941633
+#### End: Loading @ 4942087
+#### Start: Entering place...
+#### Start: Creating village @ 4947339
+#### End: Creating village @ 4947354
+Msg: Entering Peachshire.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 4958591
+#### End: Creating castle @ 4958718
+Msg: Entering Waterwood.
+#### End: Entering place (type: 1)
+Msg: 
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Excellent day, sir!
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Does that sound good?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 41 gold, if you deliver a message to a nearby town called Willow Pass, ok?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come back when done for the payment.
+Msg: 
+Msg: 
+Msg: 
+Msg: What do you want?
+Msg: 
+Msg: How may I help?
+Msg: 
+Msg: Good day, sir!
+Msg: 
+Msg: What can I do for you?
+Msg: 
+#### Start: Entering place...
+#### Start: Creating castle @ 5055225
+#### End: Creating castle @ 5055326
+Msg: Entering Purple Hill.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating village @ 5063877
+#### End: Creating village @ 5063895
+Msg: Entering Lesser Purple Lake.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 5082580
+#### End: Creating castle @ 5082681
+Msg: Entering Birch Bay.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 5087714
+#### End: Creating castle @ 5087828
+Msg: Entering Blueville.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 5091383
+#### End: Creating castle @ 5091492
+Msg: Entering New Shorthill.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 5110234
+#### End: Creating castle @ 5110332
+Msg: Entering Short Chase.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 5114222
+#### End: Creating castle @ 5114329
+Msg: Entering Blue Chase.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+Msg: Entering Purple Hill.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: 
+Msg: Excellent day, sir!
+Msg: 
+Msg: How may I help?
+>>>> message
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Pardon me?
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye!
+Msg: Can I help thee?
+Msg: 
+Msg: Excellent day, sir!
+Msg: 
+Msg: How may I help?
+Msg: 
+Msg: |
+Msg: 
+//// Game started @ 19 Mar 2007 / 15:57:41 TIMER: 6798878
+#### Start: Loading @ 6798954
+#### Start: Creating world @ 6799936
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 6802225
+#### End: Loading @ 6802698
+#### Start: Entering place...
+#### Start: Creating castle @ 6809466
+#### End: Creating castle @ 6809563
+Msg: Entering Birch Bridge.
+#### End: Entering place (type: 1)
+Msg: 
+Msg: 
+Msg: 
+Msg: 
+Msg: 
+Msg: 
+Msg: |
+Msg: 
+Msg: Nothing in there.
+Msg: Can I help thee?
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Does that sound good?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 92 gold, if you deliver a message to a town called Water Forest southeast of here, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I heard you the first time!
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Are you interested?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 105 gold, if you deliver a message to a town called Hollowville southwest of here, ok?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come back when done for the payment.
+Msg: 
+#### Start: Entering place...
+#### Start: Creating castle @ 6881631
+#### End: Creating castle @ 6881741
+Msg: Entering Hollowville.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: 
+Msg: What can I do for you?
+Msg: 
+Msg: At your service.
+Msg: 
+Msg: What can I do for you?
+Msg: 
+Msg: Good day, sir!
+>>>> message for you
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Thank you. Have some gold for the trouble.
+Msg: 
+//// Game started @ 24 Mar 2007 / 16:43:06 TIMER: 6916505
+#### Start: Loading @ 6916540
+#### Start: Creating world @ 6917606
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 6919486
+#### End: Loading @ 6920100
+#### Start: Entering place...
+#### Start: Creating castle @ 6935972
+#### End: Creating castle @ 6936075
+Msg: Entering Redshire.
+#### End: Entering place (type: 1)
+Msg: Why are you bothering me?
+Msg: 
+Msg: |
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Is there anything I could do for you, sir?
+>>>> job
+#### Start: Special Parser
+//// Game started @ 24 Mar 2007 / 17:02:46 TIMER: 8096451
+#### Start: Loading @ 8096453
+#### Start: Creating world @ 8098463
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 8100407
+#### End: Loading @ 8100759
+#### Start: Entering place...
+#### Start: Creating castle @ 8104535
+#### End: Creating castle @ 8104684
+Msg: Entering Short Bay.
+#### End: Entering place (type: 1)
+Msg: 
+Msg: 
+Msg: Nothing in there.
+Msg: Can I help thee?
+>>>> job
+#### Start: Special Parser
+//// Game started @ 24 Mar 2007 / 17:04:14 TIMER: 8184172
+#### Start: Loading @ 8184173
+#### Start: Creating world @ 8185025
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 8187795
+#### End: Loading @ 8188249
+#### Start: Entering place...
+#### Start: Creating castle @ 8190713
+#### End: Creating castle @ 8190942
+Msg: Entering Green Meadows.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: 
+Msg: Why are you bothering me?
+Msg: 
+Msg: 
+Msg: 
+Msg: Excellent day, sir!
+>>>> work
+#### Start: Special Parser
+//// Game started @ 15 Apr 2007 / 11:42:05 TIMER: 2235469
+#### Start: Loading @ 2235528
+#### Start: Creating world @ 2236788
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 2238913
+#### End: Loading @ 2239640
+#### Start: Entering place...
+#### Start: Creating castle @ 2241975
+#### End: Creating castle @ 2242078
+Msg: Entering Rockhill.
+#### End: Entering place (type: 1)
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Excellent day, sir!
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I could use a courier. Does that sound good?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 32 gold, if you deliver a message to a town called Rockhill east of here, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come back when done for the payment.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye, bye.
+Msg: How may I help?
+Msg: 
+#### Start: Entering place...
+#### Start: Creating castle @ 2331923
+#### End: Creating castle @ 2332038
+Msg: Entering New Hornburg.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2345171
+#### End: Creating castle @ 2345250
+Msg: Entering Mount Forest.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2348545
+#### End: Creating castle @ 2348646
+Msg: Entering Pineshire.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2377462
+#### End: Creating castle @ 2377546
+Msg: Entering East Mount Gate.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2388628
+#### End: Creating castle @ 2388741
+Msg: Entering East Bluehold.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2394800
+#### End: Creating castle @ 2394903
+Msg: Entering Peachvale.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2401298
+#### End: Creating castle @ 2401398
+Msg: Entering Upper Hornburg.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2405248
+#### End: Creating castle @ 2405332
+Msg: Entering Silverhold.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating village @ 2414572
+#### End: Creating village @ 2414587
+Msg: Entering Peach Pass.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating village @ 2417220
+#### End: Creating village @ 2417238
+Msg: Entering Shortwood.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 2421583
+#### End: Creating castle @ 2421675
+Msg: Entering Mount Valley.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+Msg: Entering Peachvale.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating village @ 2435288
+#### End: Creating village @ 2435300
+Msg: Entering Silver Forest.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating village @ 2440239
+#### End: Creating village @ 2440254
+Msg: Entering Greater Red Arbor.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating village @ 2443706
+#### End: Creating village @ 2443719
+Msg: Entering Silverville.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 2449158
+#### End: Creating castle @ 2449239
+Msg: Entering Willow Bay.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating village @ 2452921
+#### End: Creating village @ 2452938
+Msg: Entering Greenshire.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating village @ 2455072
+#### End: Creating village @ 2455087
+Msg: Entering Blueville.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 2461842
+#### End: Creating castle @ 2461954
+Msg: Entering Birch Meadows.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating village @ 2465660
+#### End: Creating village @ 2465674
+Msg: Entering New Rich Chase.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating village @ 2469324
+#### End: Creating village @ 2469341
+Msg: Entering Red Grove.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 2497078
+#### End: Creating castle @ 2497177
+Msg: Entering Lower Willowhold.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: 
+Msg: 
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Good day, sir!
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Does that sound good?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You would get 34 gold for delivering a message to a nearby town called Blue Valley southwest of here, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come collect your payment when you're done.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Godspeed!
+#### Start: Entering place...
+#### Start: Creating village @ 2567929
+#### End: Creating village @ 2567940
+Msg: Entering Long Lake.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 2571478
+#### End: Creating castle @ 2571600
+Msg: Entering Lower Short Forest.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 2575723
+#### End: Creating castle @ 2575813
+Msg: Entering Blue Valley.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: 
+Msg: Do you need something?
+Msg: 
+Msg: Is there anything I could do for you, sir?
+>>>> a message for you sir
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Well hand it over. Have some gold for the trouble.
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: What is your point?
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Maybe we'll meet again.
+#### Start: Entering place...
+Msg: Entering Lower Willowhold.
+#### End: Entering place (type: 1)
+Msg: Can I help thee?
+>>>> job done
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Well done. Here is your payment.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: May the force be with you.
+Msg: Is there anything I could do for you, sir?
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I happen to need a courier. Does that sound good?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 103 gold, if you deliver a message to a town called Purple Pass west of here, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come back when done for the payment.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: See you.
+Msg: What can I do for you?
+>>>> job done
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I could use a courier. Are you interested?
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: See you.
+//// Game started @ 15 Apr 2007 / 12:11:06 TIMER: 3976794
+#### Start: Loading @ 3976851
+#### Start: Creating world @ 3978057
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 3980310
+#### End: Loading @ 3980772
+#### Start: Entering place...
+#### Start: Creating castle @ 3983752
+#### End: Creating castle @ 3983841
+Msg: Entering Water Bridge.
+#### End: Entering place (type: 1)
+Msg: Why are you bothering me?
+Msg: 
+Msg: |
+Msg: 
+Msg: Good day, sir!
+>>>> job
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I could use a courier. Does that sound good?
+>>>> yes
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 44 gold, if you deliver a message to a town called Lesser Greenshire south of here, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come collect your payment when you're done.
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Stop that.
+>>>> end
+#### Start: Special Parser
+Msg: 
+Msg: May the force be with you.
+Msg: What can I do for you?
+Msg: 
+#### Start: Entering place...
+#### Start: Creating castle @ 4062260
+#### End: Creating castle @ 4062379
+Msg: Entering Lesser Greenshire.
+#### End: Entering place (type: 1)
+Msg: Good day, sir!
+Msg: 
+Msg: What can I do for you?
+Msg: 
+Msg: 
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Excellent day, sir!
+>>>> hello
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Greetings to you!
+>>>> message
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Well hand it over. Here's a tip of 2.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye!
+Msg: |
+Msg: 
+Msg: 
+Msg: 
+#### Start: Entering place...
+Msg: Entering Water Bridge.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: How may I help?
+>>>> hello
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Well hello!
+>>>> manne
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Please speak english.
+>>>> mission accomplished
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Well done. Here is your payment.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: See you!
+Msg: At your service.
+>>>> horse
+#### Start: Special Parser
+//// Game started @ 15 Apr 2007 / 12:41:00 TIMER: 5771359
+#### Start: Loading @ 5771433
+#### Start: Creating world @ 5772831
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+//// Game started @ 15 Apr 2007 / 12:42:08 TIMER: 5839119
+#### Start: Loading @ 5839174
+#### Start: Creating world @ 5841332
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 5844428
+#### End: Loading @ 5845049
+#### Start: Entering place...
+#### Start: Creating castle @ 5861850
+#### End: Creating castle @ 5861980
+Msg: Entering North Hollowville.
+#### End: Entering place (type: 1)
+Msg: Lock destroyed!
+Msg: Lock destroyed!
+Msg: You destroyed a piece of furniture!
+Msg: You destroyed a piece of furniture!
+Msg: Guards!
+Msg: Opponent's hit is DEFLECTED!
+Msg: |
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+Msg: |
+Msg: 
+Msg: |
+Msg: Opponent's hit is DEFLECTED!
+Msg: |
+Msg: 
+Msg: 
+Msg: Opponent's hit is DEFLECTED!
+Msg: 
+Msg: |
+Msg: 
+Msg: |
+Msg: Opponent MISSED!
+Msg: 
+Msg: |
+Msg: |
+Msg: |
+Msg: Opponent's hit is DEFLECTED!
+Msg: 
+Msg: 
+Msg: |
+Msg: 
+Msg: Opponent HITS!
+Msg: 
+Msg: You HIT!
+Msg: You killed your opponent!
+Msg: 
+Msg: |
+Msg: |
+Msg: |
+Msg: |
+//// Game started @ 29 Jul 2007 / 13:08:02 TIMER: 6027701
+#### Start: Loading @ 6027703
+#### Start: Creating world @ 6028405
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 6029043
+#### End: Loading @ 6029363
+#### Start: Entering place...
+#### Start: Creating village @ 6049993
+#### End: Creating village @ 6050004
+Msg: Entering Pine Lake.
+#### End: Entering place (type: 2)
+//// Game started @ 29 Jul 2007 / 13:13:57 TIMER: 6381738
+#### Start: Loading @ 6381740
+#### Start: Creating world @ 6382333
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 6383023
+#### End: Loading @ 6383245
+#### Start: Entering place...
+#### Start: Creating village @ 6399544
+#### End: Creating village @ 6399553
+Msg: Entering Silver Lake.
+#### End: Entering place (type: 2)
+Msg: Is there anything I could do for you, sir?
+>>>> where is closest shop
+#### Start: Parsing Input
+#### End: Parsing Input
+Msg: Just go Downtown!
+>>>> ok
+#### Start: Parsing Input
+#### End: Parsing Input
+Msg: I'm not sure if I understood you correctly...
+>>>> bye
+#### Start: Parsing Input
+Msg: 
+Msg: Bye.
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: Can I help thee?
+Msg: 
+#### Start: Entering place...
+#### Start: Creating castle @ 6534086
+#### End: Creating castle @ 6534131
+Msg: Entering Green Valley.
+#### End: Entering place (type: 1)
+Msg: How may I help?
+Msg: 
+Msg: |
+Msg: 
+Msg: |
+Msg: 
+Msg: You HIT!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Your hit was DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: You MISSED!
+Msg: How may I help?
+Msg: 
+Msg: 
+Msg: 
+Msg: Nothing in there.
+Msg: Good day, sir!
+>>>> quest
+#### Start: Special Parser
+#### End: Special Parser
+Msg: If you are looking for a job, I could use a courier. Are you interested?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: I pay you 127 gold, if you deliver a message to a town called Birchwood east of here, ok?
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Come back when done for the payment.
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Err...
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: May the force be with you.
+Msg: What can I do for you?
+Msg: 
+Msg: Well?
+Msg: 
+#### Start: Entering place...
+#### Start: Creating village @ 6688841
+#### End: Creating village @ 6688847
+Msg: Entering Red Chase.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating castle @ 6700544
+#### End: Creating castle @ 6700579
+Msg: Entering Willowburg.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 6704633
+#### End: Creating castle @ 6704668
+Msg: Entering Birchwood.
+#### End: Entering place (type: 1)
+Msg: How may I help?
+>>>> message
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Thank you. Have some gold for the trouble.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: See you.
+#### Start: Entering place...
+#### Start: Creating castle @ 6767999
+#### End: Creating castle @ 6768038
+Msg: Entering Short Field.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+Msg: Entering Willowburg.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+Msg: Entering Birchwood.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 6826589
+#### End: Creating castle @ 6826633
+Msg: Entering Willow Field.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+Msg: Entering Short Field.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+#### Start: Creating castle @ 6849741
+#### End: Creating castle @ 6849774
+Msg: Entering Lesser Birchdale.
+#### End: Entering place (type: 1)
+#### Start: Entering place...
+Msg: Entering Green Valley.
+#### End: Entering place (type: 1)
+Msg: At your service.
+Msg: 
+Msg: Good day, sir!
+>>>> job done
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You seem to have accomplished your mission. Here is your money.
+>>>> thanks
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Don't mention it.
+>>>> bye
+#### Start: Special Parser
+Msg: 
+Msg: Bye, bye.
+//// Game started @ 01 Jan 2008 / 20:11:18 TIMER: 27518926
+#### Start: Loading @ 27518961
+#### Start: Creating world @ 27519599
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 27520190
+#### End: Loading @ 27520497
+#### Start: Entering place...
+#### Start: Creating cave (metaballs) @ 27536622
+#### End: Creating cave @ 27536638
+#### End: Entering place (type: 3)
+Msg: Opponent's hit is DEFLECTED!
+Msg: You HIT!
+Msg: Opponent's hit is DEFLECTED!
+Msg: You HIT!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent MISSED!
+Msg: You HIT!
+Msg: You killed your opponent!
+Msg: You MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: You HIT!
+Msg: You killed your opponent!
+Msg: Opponent's hit is DEFLECTED!
+Msg: You HIT!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: You MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: You MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Your hit was DEFLECTED!
+Msg: Opponent HITS!
+Msg: You HIT!
+Msg: You killed your opponent!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Your hit was DEFLECTED!
+Msg: Opponent MISSED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: You HIT!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Your hit was DEFLECTED!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: Opponent HITS!
+Msg: You HIT!
+Msg: Opponent MISSED!
+Msg: You MISSED!
+Msg: Opponent MISSED!
+Msg: You HIT!
+Msg: You killed your opponent!
+Msg: Your hit was DEFLECTED!
+Msg: Opponent HITS!
+Msg: You HIT!
+Msg: Opponent HITS!
+Msg: Your hit was DEFLECTED!
+Msg: Opponent MISSED!
+Msg: You HIT!
+Msg: Your hit was DEFLECTED!
+Msg: You HIT!
+#### Start: Entering place...
+#### Start: Creating cave (GoL) @ 27618144
+#### End: Creating cave @ 27618209
+#### End: Entering place (type: 3)
+Msg: Your hit was DEFLECTED!
+Msg: Opponent MISSED!
+#### Start: Entering place...
+#### Start: Creating cave (GoL) @ 27633814
+#### End: Creating cave @ 27633828
+#### End: Entering place (type: 3)
+Msg: You MISSED!
+Msg: You HIT!
+Msg: You HIT!
+Msg: You killed your opponent!
+Msg: Opponent's hit is DEFLECTED!
+Msg: Opponent HITS!
+Msg: Opponent's hit is DEFLECTED!
+#### Start: Entering place...
+#### Start: Creating village @ 27667038
+#### End: Creating village @ 27667046
+Msg: Entering Pine Meadows.
+#### End: Entering place (type: 2)
+Msg: Locked!
+Msg: Locked!
+Msg: Locked!
+Msg: You attacked a lock!
+Msg: Lock destroyed!
+Msg: At your service.
+>>>> horse
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Speak clearly.
+>>>> i want a horse
+#### Start: Special Parser
+#### End: Special Parser
+Msg: A horse costs you 842 gold. Just say 'ok' if you are interested.
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Nice doing bussiness with you.
+Msg: Can I help thee?
+>>>> ruuvimeisseli
+#### Start: Special Parser
+#### End: Special Parser
+Msg: This one's on the house!
+>>>> give me a drink
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Drink? 'Ok' is the magic word...
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Enjoy!
+>>>> give me mannecola
+#### Start: Special Parser
+#### End: Special Parser
+Msg: You are mumbling...
+>>>> give me a shooter
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Speak clearly.
+>>>> give me a shot
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Shot? Say 'ok' to buy it.
+>>>> ok
+#### Start: Special Parser
+#### End: Special Parser
+Msg: Tell me if you want more.
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+#### Start: Entering place...
+Msg: Entering Pine Meadows.
+#### End: Entering place (type: 2)
+Msg: You turned into a demon!
+Msg: |
+Msg: 
+Msg: 
+Msg: 
+Msg: 
+Msg: 
+Msg: |
+Msg: 
+Msg: 
+Msg: |
+Msg: |
+Msg: 
+Msg: 
+Msg: 
+Msg: |
+Msg: |
+Msg: 
+Msg: 
+Msg: |
+Msg: 
+Msg: |
+Msg: 
+Msg: |
+Msg: 
+Msg: 
+Msg: |
+Msg: 
+Msg: 
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: |
+Msg: 
+Msg: You HIT!
+Msg: Opponent MISSED!
+Msg: Opponent MISSED!
+Msg: You HIT!
+Msg: You killed your opponent!
+#### Start: Entering place...
+#### Start: Creating castle @ 27933180
+#### End: Creating castle @ 27933206
+Msg: Entering West Long Gate.
+#### End: Entering place (type: 1)
+Msg: |
+Msg: |
+Msg: |
+Msg: |
+Msg: 
+Msg: |
+Msg: 
+Msg: |
+Msg: |
+//// Game started @ 01 Jan 2008 / 20:28:44 TIMER: 28564952
+#### Start: Loading @ 28564963
+#### Start: Creating world @ 28565620
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 28566203
+#### End: Loading @ 28566384
+Msg: You turned into a demon!
+Msg: I am busy.
+Msg: I am in haste
+Msg: I am busy.
+Msg: I am in haste
+Msg: Do I look like I want to chat with you?
+Msg: Be gone.
+Msg: I have no time for you.
+//// Game started @ 03 Jan 2008 / 21:36:06 TIMER: 25191845
+#### Start: Loading @ 25191903
+#### Start: Creating world @ 25192508
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 25193073
+#### End: Loading @ 25193727
+#### Start: Entering place...
+#### Start: Creating castle @ 25207711
+#### End: Creating castle @ 25207746
+Msg: Entering Greater Redshire.
+#### End: Entering place (type: 1)
+Msg: Is there anything I could do for you, sir?
+>>>> i want long sword
+#### Start: Special Parser
+#### End: Special Parser
+Msg: The price of a great sword is 110 gold. Say 'ok' to buy it!
+>>>> ok
+#### Start: Special Parser
+Msg: 
+Msg: Have nice time with it!
+Msg: Locked!
+Msg: Locked!
+Msg: You attacked a lock!
+Msg: Lock destroyed!
+Msg: Lock destroyed!
+Msg: You destroyed a piece of furniture!
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Found 5 coins!
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+Msg: Nothing in there.
+//// Game started @ 17 Jul 2008 / 17:56:51 TIMER: 84230265
+#### Start: Loading @ 84230295
+#### Start: Creating world @ 84231481
+#### Creating forests...
+#### Creating hills...
+#### Creating mountain ranges...
+#### Creating lakes...
+#### Creating castles...
+#### Creating villages...
+#### Creating caves...
+#### Creating borders...
+#### End: Creating world @ 84232189
+#### End: Loading @ 84232894
+#### Start: Entering place...
+#### Start: Creating village @ 84302011
+#### End: Creating village @ 84302022
+Msg: Entering Rich Pass.
+#### End: Entering place (type: 2)
+#### Start: Entering place...
+#### Start: Creating dungeon @ 84326678
+#### End: Creating dungeon @ 84326692
+#### End: Entering place (type: 3)
+#### Start: Entering place...
+#### Start: Creating cave (metaballs) @ 84352735
+#### End: Creating cave @ 84352753
+#### End: Entering place (type: 3)
+Msg: You MISSED!
+Msg: Your hit was DEFLECTED!
+#### Start: Entering place...
+#### Start: Creating dungeon @ 84366991
+#### End: Creating dungeon @ 84366999
+#### End: Entering place (type: 3)
+Msg: Your hit was DEFLECTED!
+Msg: You HIT!
+Msg: Your hit was DEFLECTED!
+Msg: You MISSED!
+Msg: You HIT!
+Msg: You HIT!
+Msg: You HIT!
+Msg: You HIT!
+Msg: You HIT!
+Msg: You HIT!
+Msg: Your hit was DEFLECTED!
+Msg: You HIT!
+Msg: Your hit was DEFLECTED!
+Msg: You HIT!
+Msg: You MISSED!
+Msg: You HIT!
+Msg: Your hit was DEFLECTED!
+Msg: You HIT!

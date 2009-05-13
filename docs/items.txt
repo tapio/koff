@@ -1,0 +1,26 @@
+FILE: items
+
+Name:             f  s  a    spdbon  cost
+-----------------------------------------
+Sword & shield          +      0      50
+Spear             +  -        150     50
+Great sword       -  +       -300     90
+Flail             -- +       -100     40
+Axe               -- +        -50     30
+Dagger            -  -        200
+Club              -  -         0
+
+Leather armor           +            100 
+Chainmail               ++           350
+Plate mail        -     ++++         550
+
+Horse                +  +     1/3*   1000
+
+*) Horse cuts the moving delay to one third,
+   except when riding in mountains.
+
+f stands for fight bonus
+s stands for strength bonus
+a stands for armor bonus
+spdbon stands for speed bonus in combat (miiliseconds)
+cost indicates the base price of the item

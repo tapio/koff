@@ -1,0 +1,31 @@
+Knight of Faith alpha ohje
+--------------------------
+Aja ensiksi Install.bat!!!
+
+Käynnistä peli ja yritä suorittaa seuraavat tehtävät:
+(Huomaa, että yhdestä kaupungista ei välttämättä löydy kaikkia palveluja.)
+
+* Osta hevonen
+* Lahjoita rahaa kirkolle / osta ane (synninpäästö)
+* Hanki juotavaa tavernassa
+* Osta ase kauppiaalta
+* Myy ase takaisin
+Jos yritykset epäonnistuvat virheilmoituksien takia, kirjoita siitä
+alpha_lomake.txt:n kommentti palstalle.
+
+Tarkkaile myös kaupungin ulkomuotoa ja raportoi:
+* Kummallisuudet (kaappeja ovien edessä, puolikkaita sänkyjä tms.)
+ - kuva! F11 = ScreenShot
+   Muuttakaa mielellään bmp-kuvat jollakin ohjelmalla png-formaattiin.
+* Virheilmoitukset (MAVien kanssa ei tarvi vaivautua)
+
+Täytä alpha_lomake.txt ja palauta se Aavesoturille joko
+* cb-foorumin kautta yksityisviestillä
+* sähköpostilla tapio_vierros@hotmail.com
+* (mesessä tapio_vierros@hotmail.com)
+PALAUTA MYÖS log.txt TIEDOSTO!
+
+F11 = ScreenShot
+Nuolet liikkuu.
+Keskustelemaan pääsee kävelemällä kohdetta päin.
+Keskustelu tapahtuu englanniksi.

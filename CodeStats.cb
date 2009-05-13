@@ -1,0 +1,27 @@
+// LICENSE: See LICENSE-file
+
+'ChDir "Reaching for Stars"
+Repeat
+    Color cbWhite
+    Locate 10,10
+    file$ = ""
+    Repeat
+        file$=Input("File: ")
+        DrawScreen
+    Until KeyHit(cbkeyreturn)
+    CloseInput
+    f = OpenToRead(file)
+    While Not EOF(f)
+        row$ = Trim(ReadLine(f))
+        If Lower(GetWord(row,1)) = "function" Then funcs+1
+        If row <> "" Then actual+1
+        lines+1
+    Wend
+    CloseFile f
+    
+    Print "Lines:     "+lines
+    Print "Not empty: "+actual
+    Print "Funcs:     "+funcs
+    Print ""
+    WaitKey
+Forever

@@ -1,0 +1,36 @@
+file  rows func cons
+--------------------
+totl: 3150  64
+updt: 01/01/08
+
+
+
+file  rows func cons
+--------------------
+game: 380   0
+load: 310   0
+wrld: 1100  20
+engi: 340   16
+misc: 690   24
+--------------------
+totl: 2820  60  94?
+diff: +530  +9
+updt: 28/06/06
+
+
+
+
+
+
+
+file  rows func cons
+--------------------
+game: 360   0
+load: 270   0
+wrld: 960   17
+engi: 320   16
+misc: 380   18
+--------------------
+totl: 2290  51  94
+
+updt: 11/05/06

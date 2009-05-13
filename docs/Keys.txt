@@ -1,0 +1,8 @@
+FILE: Keys reference
+
+Arrows 		- Move
+Return 		- Enter places, pray
+RShift		- Change action mode (talk/fight)
+Numbers 	- Examine item
+Alt+Number	- Discard item
+Space		- Pause

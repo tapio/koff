@@ -1,0 +1,10 @@
+FILE: fighting system.txt
+
+How is the outcome of a fight calculated.
+'Dice' means a virtual throw of a standard 6-sided dice.
+
+If a dice added with attacers fighting skill is equal or higher than defenders same, the attacker has hit, otherwise the defender has deflected the blow.
+
+To determine if the hit is an injuring one or just a minor scratch, attackers strength is compared to defenders armor (both modified with a dice roll). If the attacker's value is higher (or equal), the blow has found its mark and the defender is injured.
+
+After that, the defender can try to attack the attacker. Whichever loses all of his health first, dies.

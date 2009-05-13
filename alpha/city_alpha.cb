@@ -1,0 +1,401 @@
+// Knight of Faith alpha
+// AUTHOR: Tapio Vierros 2006
+// LICENSE: see LICENSE-file
+
+Include "alpha_load.cb"
+
+// ----------- GAME LOOP ---------- //
+Repeat
+    
+    moved = False
+    If talking = False Then
+        Gosub Move
+    Else
+        Color cbWhite
+        Locate 120,440
+        st$ = Input(">>>")
+        If KeyHit(cbkeyReturn)Then
+            If st$ = "" Then EndTalk() Else AddMsg(Parse(st$),15000): CloseInput
+        EndIf
+    EndIf
+
+    Gosub NPCs
+    Gosub DrawWorld
+    DrawStats()
+    DayNight()
+    
+    If KeyDown(cbkeyF10) Then Color cbRed: Text 10,10,FPS(): Text w-100,10,hx+" "+hy: Text 10,40,"RND seed "+seed: Text 510,410,"Clock: " + clock
+    If KeyHit(cbkeyF11)  Then ScreenShot "shot"+Rand(1000,9999)+".bmp"
+    If KeyHit(1)         Then AddLog("//// Game ended @ "+ Date() +" / "+ Time() +" TIMER: "+ Timer()): End
+    
+    DrawScreen
+
+Forever
+
+
+
+// ----------- SUB PROGRAMS ---------- //
+
+
+// DRAW WORLD //
+DrawWorld:
+    If curmap <> 0 And moved = True And noFOV = False Then LOS(hx,hy,LOSdist,LOSdet,automap)
+    For j = -viewy To viewy
+        For i = -viewx To viewx
+            xx = hx + i
+            yy = hy + j
+            If curmap = 0 Then 
+                If yy < 1 Or xx > maxx(curmap) Then yy = 1: xx = maxy(curmap)
+                If xx < 1 Or yy > maxy(curmap) Then xx = 1: yy = maxx(curmap)
+                If world(xx,yy) < 100 Then
+                    DrawImage tileset, i*16 + hw, j*16 + hh, world(xx,yy)
+                Else
+                    DrawImage sprites, i*16 + hw, j*16 + hh, world(xx,yy)-100
+                EndIf
+            Else
+                If xx < 1 Then xx = 1
+                If yy < 1 Then yy = 1
+                If xx > maxx(curmap) Then xx = maxx(curmap)
+                If yy > maxy(curmap) Then yy = maxy(curmap)
+                If viewmask(xx,yy) = 1 Or noFOV = True Then 
+                    If maps(xx,yy,curmap) < 100 Then
+                        DrawImage tileset, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)
+                    ElseIf maps(xx,yy,curmap) < 200 Then
+                        DrawImage sprites, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)-100
+                    Else
+                        DrawImage tileset, i*16 + hw, j*16 + hh, maps(xx,yy,curmap)-200
+                    EndIf
+                EndIf
+            EndIf
+        Next i
+    Next j
+    Color 0,0,0: Box hw, hh, 16,16, ON
+    spri = item
+    If riding = True Then DrawImage sprites, hw, hh, horseimg
+    If item = demonstaff Then spri = demon
+    If spri = emptyslot Then spri = noweapon
+    DrawImage sprites, hw, hh, spri
+   
+Return
+
+
+
+// KEYS & MOVEMENT //
+Move:
+
+    If KeyHit(cbkeySpace) Then paused = Not paused
+    If KeyHit(cbkeyRShift) And KeyHit(cbkeyTab) Then mode   = Not mode
+    If KeyHit(cbkeyH) And horse = True And GetMapType() <> map_cave Then riding = Not riding
+    
+    k = GetKey()
+    If k => 49 And k <= 57 Then
+        k = k - 48
+        If KeyDown(cbKeyLShift) And inv(k) <> emptyslot Then
+            UseItem(k)
+        ElseIf KeyDown(cbKeyLAlt) Then
+            RemoveItem(k)
+        ElseIf inv(k) <> emptyslot
+            slot = k
+            Gosub Inventory
+        EndIf
+    EndIf
+
+    If Timer()> rec+delay Then
+        If UpKey()    Then hy-1: paused = False: moved = True
+        If DownKey()  Then hy+1: paused = False: moved = True
+        If LeftKey()  Then hx-1: paused = False: moved = True
+        If RightKey() Then hx+1: paused = False: moved = True
+        rec = Timer()
+    EndIf
+    // SmartLOS System (tm)
+    If UpKey() + DownKey() + LeftKey() + RightKey() > 0 Then
+        LOSdet = LOSmin: LOSdist = 10: walking = True
+    Else
+        LOSdet = LOSmax: LOSdist = 14
+        If curmap <> 0 And walking = True And noFOV = False Then LOS(hx,hy,LOSdist,LOSdet,automap)
+        walking = False
+    EndIf
+    
+    If hx < 1 Then hx = 1
+    If hy < 1 Then hy = 1
+    If hx > maxx(curmap) Then hx = maxx(curmap)
+    If hy > maxy(curmap) Then hy = maxy(curmap)
+
+    If curmap = 0 Then under = world(hx,hy) Else under = maps(hx,hy,curmap)
+    // "Collision"
+    ' furniture
+    If under = closet Or under = table Or under = barrel Then
+        If mode = talk Then
+            If Rand(1,100) = 1 Then fcoins = Rand(1,5): AddMsg("Found "+fcoins+" coins!"): gold + fcoins Else AddMsg("Nothing in there.")
+        ElseIf mode = fight Then
+            If Timer() > fighttim+fightdel+GetStat(item,spd) Then 
+                If strength+Rand(1,6) => 6 Then maps(hx,hy,curmap) = rubble: AddMsg("You destroyed a piece of furniture!"): ClearKeys Else AddMsg("You attacked a piece of furniture!")
+            EndIf
+            If AnyoneSees(hx,hy) Then locs(curmap,6) = True: AddMsg(GetRandWord("Alarm!|Guards!|Call the guards!|Thief!","|"))
+        EndIf
+    ' locked stuff
+    ElseIf (under = door_locked) Or (under = closet_locked) Then
+        If mode = talk Then
+            AddMsg("Locked!")
+        ElseIf mode = fight Then
+            If Timer() > fighttim+fightdel+GetStat(item,spd) Then 
+                If strength+Rand(1,6) => 6 Then maps(hx,hy,curmap) = maps(hx,hy,curmap) - 200: AddMsg("Lock destroyed!"): ClearKeys Else AddMsg("You attacked a lock!")
+            EndIf
+            If AnyoneSees(hx,hy) Then locs(curmap,6) = True: AddMsg(GetRandWord("Alarm!|Guards!|Call the guards!|Thief!","|"))
+        EndIf
+    ' shopkeepers etc.
+    ElseIf under => priest And under <= lord Then
+        For i = priest To lord
+            If under = i Then Exit
+        Next i
+        If mode = fight And Timer() > fighttim+fightdel+GetStat(item,spd) Then Gosub fightshop
+        If mode = talk Then InitTalk(-i)
+    ' npcs
+    ElseIf under => 100 And under < 200 And moved = True Then
+        For i = 1 To maxNPC
+            If hx = NPC(i,1) And hy = NPC(i,2) Then Exit
+        Next i
+        If mode = fight And Timer() > fighttim+fightdel+GetStat(item,spd) Then Gosub fight
+        If mode = talk Then InitTalk(i)
+    EndIf
+    ' total collision
+    If IsWall(hx,hy) Then
+        hx = oldx : hy = oldy
+        If curmap = 0 Then under = world(hx,hy) Else under = maps(hx,hy,curmap)
+    EndIf
+    
+    delay = movedelays(under)
+    If riding = True And (under <= hills Or under = darkfloor) Then delay = delay / 3
+
+    If curmap<>0 Then
+        If hx<=1 Or hy<=1 Or hx=>maxx(curmap) Or hy=>maxy(curmap) Then
+            ClearNPCs()
+            curmap + 1
+            CreateCastle(curmap)
+            numNPC = locs(curmap,5)
+            For j = 1 To numNPC
+                SpawnNPC(j)
+            Next j
+
+            hx = locs(curmap,3)
+            hy = locs(curmap,4)
+            LOS(hx,hy,LOSdist,LOSdet,automap)
+
+            pricelevel = Rnd(0.7,1.3)
+        EndIf
+    EndIf
+
+
+    // Return-key
+    If KeyHit(cbkeyReturn) Then
+        paused = False
+        If under = caveexit Then
+            ClearNPCs()
+            curmap = 0
+            hx = worldhx: hy = worldhy
+            If horse = True Then riding = True
+            Goto mapchanged
+        ElseIf under => castle1 And under <= cave Then
+            EnterPlace()
+        ElseIf faith => 1 And cond < maxcond Then
+            faith-1 : cond+1
+        EndIf
+    EndIf
+    mapchanged:
+
+    oldx = hx: oldy = hy
+
+    If faith < -25 And item <> demonstaff Then ClearInv(): inv(1) = demonstaff: item = inv(1): AddMsg("You turned into a demon!",15000)
+
+    If KeyHit(cbkeyInsert) Then LOSdet = 0.5
+    If KeyHit(cbkeyHome)   Then LOSdet = 1.5    
+    If KeyHit(cbkeyPgUp)   Then LOSdet = 2.0
+
+    If KeyDown(cbKeyG) And KeyDown(cbKeyU) And KeyDown(cbKeyN) Then Tappelu()
+
+    // xiit //
+    If KeyDown(cbkeyLShift)  Then delay  = 0: noFOV = True Else noFOV = False
+    'If KeyDown(cbkeyH)       Then riding = Not riding: Wait 100
+    If KeyHit(cbkeyadd)      Then faith+1
+    If KeyHit(cbkeysubtract) Then faith-1
+    If KeyHit(cbkeymultiply) And cond < maxcond Then cond+1
+    If KeyHit(cbkeydivide)   And cond > 0       Then cond-1
+    If KeyHit(cbkeyG)        Then gold + 100
+    If KeyHit(cbkeyF7)       Then tileset = tiles_4
+    If KeyHit(cbkeyF8)       Then tileset = tiles_16
+    //////////
+
+Return
+
+
+// NON-PLAYER CHARACTERS (&MONSTERS)
+NPCs:
+    For i = 1 To maxNPC
+        
+        // WORLD MAP //
+        If curmap = 0 Then
+            If NPC(i,9) <= 0 And i <= numNPC Then 
+                If world(NPC(i,1),NPC(i,2))=>100 Then world(NPC(i,1),NPC(i,2)) = NPC(i,7)
+                SpawnNPC(i)
+            EndIf
+            
+            If NPC(i,8) = npc_travel Then
+                // Move
+                If Timer() > NPC(i,5)+NPC(i,6) Then
+                    MoveNPC(i, Sgn(NPC(i,3)-NPC(i,1)), Sgn(NPC(i,4)-NPC(i,2)))
+                    If NPC(i,1) = NPC(i,3) And NPC(i,2) = NPC(i,4)  Then NPC(i,9) = 0
+                    If Distance(NPC(i,1),NPC(i,2),hx,hy) > NPCrange Then NPC(i,9) = 0
+                EndIf
+            ElseIf NPC(i,8) = npc_fight Then
+                If Timer() > NPC(i,5)+1000 And Distance(NPC(i,1),NPC(i,2),hx,hy) < 1.5 Then
+                    Gosub NPCfights
+                ElseIf Distance(NPC(i,1),NPC(i,2),hx,hy) => 1.5
+                    NPC(i,8) = npc_chase
+                EndIf
+            EndIf
+         ///////////      
+        // CAVES //
+        ElseIf GetMapType() = map_cave Then
+            If NPC(i,9) > 0 Then
+                If NPC(i,8) = npc_travel Then
+                    // Move
+                    If Timer() > NPC(i,5)+NPC(i,6) And ShootBeam(NPC(i,1),NPC(i,2),hx,hy) = True Then
+                        MoveNPC(i, Sgn(hx-NPC(i,1)), Sgn(hy-NPC(i,2)))
+                        If Distance(NPC(i,1),NPC(i,2),hx,hy) < 1.5 Then NPC(i,8) = npc_fight
+                    EndIf
+                ElseIf NPC(i,8) = npc_fight Then
+                    If Timer() > NPC(i,5)+1000 And Distance(NPC(i,1),NPC(i,2),hx,hy) < 1.5 Then
+                        Gosub NPCfights
+                    ElseIf Distance(NPC(i,1),NPC(i,2),hx,hy) => 1.5
+                        NPC(i,8) = npc_travel
+                    EndIf
+                EndIf
+            EndIf
+         /////////////
+        // CASTLES //
+        ElseIf GetMapType() = map_castle Or GetMapType() = map_village Then
+            If NPC(i,9) > 0 Then
+                If NPC(i,8) = npc_travel Then
+
+                ElseIf NPC(i,8) = npc_move Then
+                    // Move
+                    If Timer() > NPC(i,5)+NPC(i,6) Then
+                        MoveNPC(i, Rand(-1,1), Rand(-1,1))
+                    EndIf 'move
+                    // Gone outside town?
+                    If NPC(i,1) = 2 Or NPC(i,1) = maxx(curmap)-1 Or NPC(i,2) = 2 Or NPC(i,2) = maxy(curmap)-1 Then
+                        manne=0
+                        maps(NPC(i,1),NPC(i,2),curmap) = grass
+                        NPC(i,9) = 0
+                        SpawnNPC(i)
+                    EndIf 'gone outside town?
+                EndIf 'state
+            EndIf 'living?
+        EndIf 'castle
+    Next i
+Return
+
+
+NPCfights:
+    If fighting+Rand(1,6) <= NPC(i,f)+Rand(1,6) Then
+        If strength+Rand(1,6) <= NPC(i,a)+Rand(1,6) Then
+            cond = cond - 1
+            AddMsg("Opponent HITS!")            
+        Else
+            AddMsg("Opponent MISSED!")
+        EndIf
+    Else
+        AddMsg("Opponent's hit is DEFLECTED!")
+    EndIf                
+    NPC(i,5) = Timer()
+Return
+
+
+
+
+
+
+
+Fight:
+    If NPC(i,8) <> npc_fight  Then NPC(i,8) = npc_fight: NPC(i,5) = Timer()-500
+
+    If fighting+Rand(1,6) => NPC(i,f)+Rand(1,6) Then
+        If strength+Rand(1,6) => NPC(i,a)+Rand(1,6) Then
+            NPC(i,9) = NPC(i,9) - 1
+            AddMsg("You HIT!")
+            If NPC(i,9) <= 0 Then
+                KillNPC(i)
+                If curmap <> 0 And GetMapType() <= map_village And AnyoneSees(hx,hy) Then locs(curmap,6) = True: AddMsg(GetRandWord("Alarm!|Guards!|Call the guards!|Murder!|Murderer!","|"))
+                AddMsg("You killed your opponent!")
+            EndIf
+        Else
+            AddMsg("You MISSED!")
+        EndIf
+    Else
+        AddMsg("Your hit was DEFLECTED!")
+    EndIf
+    fighttim = Timer()
+Return
+
+
+FightShop:
+
+Return
+
+
+
+Inventory:
+    exitinv = False
+    Repeat
+        SetFont font
+        Color 80,248,255
+        Box 152,72,336,336, OFF
+        Color 255,80,255    
+        Box 159,79,66,66, OFF
+        DrawImage bigicons,160,80,inv(slot)
+        Text 240,80,GetStat(inv(slot),name)
+        
+        RowText(GetStat(inv(slot),desc), 160, 460, 160)
+
+        Button("Use" ,160,360,80,30,sel=1)
+        Button("Drop",280,360,80,30,sel=2)
+        Button("Exit",400,360,80,30,sel=3)
+
+        DrawStats()
+
+        k = GetKey()
+        If k => 49 And k <= 57 Then
+            k = k - 48
+            If KeyDown(cbKeyLControl) And inv(k) <> emptyslot Then
+                UseItem(k)
+            ElseIf KeyDown(cbKeyLAlt) Then
+                RemoveItem(k)
+                If k = slot Then exitinv = True
+            ElseIf inv(k) <> emptyslot
+                slot = k
+            EndIf
+        EndIf
+
+        sel = sel + KeyHit(cbKeyRight) - KeyHit(cbKeyLeft)
+        If sel < 1 Then sel = 1
+        If sel > 3 Then sel = 3
+
+        If KeyHit(cbKeyReturn) Then
+            If sel = 1 Then UseItem(slot)
+            If sel = 2 Then RemoveItem(slot): exitinv = True
+            If sel = 3 Then exitinv = True
+        EndIf
+        If KeyHit(cbkeyF11) Then ScreenShot "shot"+Rand(1000,9999)+".bmp"
+        
+        DrawScreen
+    Until exitinv Or KeyHit(1)
+    ClearKeys
+Return
+
+
+
+
+// ----------- FUNCTIONS ---------- //
+Include "func_world.cb"
+Include "func_engine.cb"
+Include "func_misc.cb"

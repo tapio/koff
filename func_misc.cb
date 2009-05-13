@@ -1,0 +1,811 @@
+// LICENSE: See LICENSE-file
+
+// ----------- FUNCTIONS ---------- //
+
+
+Function DayNight(factor#=0)
+    If Timer() > clocktimer+hour Then
+        clocktimer = Timer()
+        clock + 1
+        If GetMapType() <> map_cave
+            If clock => 24 Then clock = 0
+            If clock <= 12 Then gamma = -120 + clock * 10
+            If clock >  12 Then gamma = - (clock-12) * 10
+            ScreenGamma gamma,gamma,gamma
+        Else
+            ScreenGamma -120,-120,-120
+        EndIf
+    EndIf
+End Function
+
+
+// Inventory functions //
+
+Function UseItem(index)
+    If inv(index) = leatherarmor Or inv(index) = chainmail Or inv(index) = platemail Then
+        If curarmor = inv(index) Then curarmor = emptyslot Else curarmor  = inv(index)
+    Else
+        item = inv(index)
+    EndIf
+End Function
+
+Function RemoveItem(index)
+    tempitem    = inv(index)
+    inv(index)  = emptyslot
+    If item     = tempitem And HasItem(tempitem) = False Then item     = emptyslot
+    If curarmor = tempitem And HasItem(tempitem) = False Then curarmor = emptyslot
+End Function
+
+Function HasItem(iItem)
+    For i = 1 To 9
+        If inv(i) = iItem Then Return i
+    Next i
+    Return False
+End Function
+
+Function ClearInv()
+    For i = 1 To 9
+        inv(i) = emptyslot
+    Next i
+    item = emptyslot
+End Function
+
+Function FreeInvSlot()
+    For i = 1 To 9
+        If inv(i) = emptyslot Then Return i
+    Next i
+    Return 0
+End Function
+
+
+Function GetStat(wp,stat)
+    If wp = sword
+        If stat = a    Then Return 1
+        If stat = name Then Return "Sword"
+        If stat = desc Then Return "A sword is a common weapon, which has a steel blade about two feet long with sharp edges and tip. It is normally accompanied with a shield for extra protection."
+        If stat = spd  Then Return 0
+        If stat = cost Then Return cost_sword
+    ElseIf wp = spear
+        If stat = f    Then Return 1
+        If stat = s    Then Return -1
+        If stat = name Then Return "Spear"
+        If stat = desc Then Return "A spear is a weapon with a long wooden shaft and sharp steel tip. It is easy to use, but lacks the strength of heavier weapons."
+        If stat = spd  Then Return 150
+        If stat = cost Then Return cost_spear
+    ElseIf wp = bigsword
+        If stat = f    Then Return -1
+        If stat = s    Then Return 1
+        If stat = name Then Return "Great sword"
+        If stat = desc Then Return "Great sword is a two-handed weapon, bigger and heavier than the normal sword. It requires strength to operate, but is deadly when a hit is delivered."
+        If stat = spd  Then Return -300
+        If stat = cost Then Return cost_bigsword
+    ElseIf wp = dagger
+        If stat = f    Then Return -1
+        If stat = s    Then Return -1
+        If stat = name Then Return "Dagger"
+        If stat = desc Then Return "Dagger is a small weapon commonly used for self-defence. As a dagger is easy to hide due its size, it is a weapon of choice for thieves."
+        If stat = spd  Then Return 200
+        If stat = cost Then Return cost_dagger
+    ElseIf wp = club
+        If stat = f    Then Return -1
+        If stat = s    Then Return -1
+        If stat = name Then Return "Club"
+        If stat = desc Then Return "A club is a crude bludgeoning weapon that can be improvised out of about everything."
+        If stat = spd  Then Return 0
+        If stat = cost Then Return cost_club
+    ElseIf wp = axe
+        If stat = f    Then Return -2
+        If stat = s    Then Return 1
+        If stat = name Then Return "Axe"
+        If stat = desc Then Return "Axe is a powerful tool when chopping wood, but in combat it lacks the agility of more sophisticated weapons."
+        If stat = spd  Then Return -50
+        If stat = cost Then Return cost_axe
+    ElseIf wp = flail
+        If stat = f    Then Return -2
+        If stat = s    Then Return 1
+        If stat = name Then Return "Flail"
+        If stat = desc Then Return "Flail is a steel bludgeon joined by a chain to a short wooden haft. It hits hard, but is difficult to use."
+        If stat = spd  Then Return -100
+        If stat = cost Then Return cost_flail
+    ElseIf wp = leatherarmor
+        If stat = a    Then Return 1
+        If stat = name Then Return "Leather armor"
+        If stat = desc Then Return "Leather armor is a light protection wear, offering basic protection against minor threats."
+        If stat = cost Then Return cost_leatherarmor
+    ElseIf wp = chainmail
+        If stat = a    Then Return 2
+        If stat = name Then Return "Chainmail"
+        If stat = desc Then Return "Chainmail is an armour made of linked iron loops. It offers good protection, while not beeing too heavy or clumsy to wear."
+        If stat = cost Then Return cost_chainmail
+    ElseIf wp = platemail
+        If stat = f    Then Return -1
+        If stat = a    Then Return 4        
+        If stat = name Then Return "Plate mail"
+        If stat = desc Then Return "Plate mail is an armour made of plates of steel. It is heavy and it affects agility, but offers the best possible protection against any threat."
+        If stat = cost Then Return cost_platemail
+    ElseIf wp = horseimg
+        If stat = s    Then Return 1
+        If stat = a    Then Return 1
+        If stat = name Then Return "Horse"
+        If stat = desc Then Return "A horse is a knight's best friend, giving speed, strength and protection."
+        If stat = cost Then Return cost_horse
+    ElseIf wp = demonstaff
+        If stat = f    Then Return 2
+        If stat = s    Then Return 1
+        If stat = name Then Return "Demonstaff"
+        If stat = spd  Then Return 0
+        If stat = desc Then Return "Demonstaff is a dangerous tri-head spear used by demons and imps."
+    ElseIf wp = angelsword
+        If stat = f    Then Return 4
+        If stat = s    Then Return 4
+        If stat = name Then Return "Michael's Sword"
+        If stat = spd  Then Return 0
+        If stat = desc Then Return "The sword of the Archangel Michael is the ultimate weapon that can cut through just about everything."
+    ElseIf wp = emptyslot
+        If stat = f    Then Return -2
+        If stat = s    Then Return -2
+        If stat = name Then Return "Empty"
+    EndIf
+    Return 0
+End Function
+
+
+
+
+// Conversation Functions
+
+Function GetGenericLine$(_tone=100)
+    impolite$ = "I have no time for you.|I am busy.|I have nothing to say to you.|Do I look like I want to chat with you?|I am in haste.|Some other time!|Be gone."
+    neutral$ = "Speak quickly.|What do you want?|What is it?|Why are you bothering me?|What?|Do you need something?|Well?"
+    friendly$ = "Good day, sir!|Excellent day, sir!|What can I do for you?|Can I help thee?|At your service.|Is there anything I could do for you, sir?|How may I help?"
+    erro$ = "Sorry, I missed that.|Please speak english.|You are mumbling...|Would you mind getting to bussiness?|Cut the crab.|Stop that.|Speak clearly.|Could you repeat that?|What do you mean?|What is your point?|Come again?|Pardon me?|Err...|What?|I cannot get a word out of that nonsense.|I'm not sure if I understood you correctly..."
+    bye$ = "Maybe we'll bump into each other again.|Maybe we'll meet again.|Have a nice day!|Bye.|Bye!|Bye, bye.|See you.|See you!|May the force be with you.|Godspeed!|Bless you."
+    repe$ = "You are repeating yourself!|You said that already!|You said that before!|Stop repeating yourself!|I heard you the first time!|No need to repeat that!"
+    If _tone = -1 Then
+        reply$ = GetRandWord(impolite$,"|")
+    ElseIf _tone = 0 Then
+        reply$ = GetRandWord(neutral$,"|")
+    ElseIf _tone = 1 Then
+        reply$ = GetRandWord(friendly$,"|")
+    ElseIf _tone = 200 Then
+        reply$ = GetRandWord(bye$,"|")
+    ElseIf _tone = 300 Then
+        reply$ = GetRandWord(repe$,"|")
+    Else
+        reply$ = GetRandWord(erro$,"|")
+    EndIf
+    
+    Return reply$
+End Function
+
+Function GetRandWord$(st$,sep$=" ")
+    wordI = Rand(1,Int(CountWords(st$,sep$)))
+    Return GetWord(st$,wordI,sep$)
+End Function
+
+
+Function CleanString$(st$)
+	symbols$ = ".,:;-_?!#¤%&/()=+\}{[]$£@€*'´`^¨~"
+	st$ = Lower(st$)
+	st$ = Trim(st$)
+
+    // Remove symbols
+    For i = 1 To Len(symbols$)
+        st$ = Replace(st$, Mid(symbols$, i, 1), " ")
+    Next i
+
+    // Remove extra spaces
+    tempst$ = "": prevletter$ = ""
+    For i = 1 To Len(st$)
+        letter$ = Mid(st$, i, 1)
+        If letter$ <> " " Or prevletter$ <> " " Then tempst$ = tempst$ + letter$
+        prevletter$ = letter$
+    Next i
+    st$ = tempst$
+    
+	st$ = Trim(Lower(tempst$))
+   
+    Return st$
+End Function
+
+
+Function KeyWord(st$, wanted$, unwanted$="", sep$=",")
+    TalkObject = ""
+    For i = 1 To CountWords(wanted$,sep$)
+        If InStr(st$,GetWord(wanted$,i,sep$)) Then found = True: Exit
+    Next i
+    If found = False Then Return 0
+    found = False
+    For j = 1 To CountWords(unwanted$,sep$)
+        If InStr(st$,GetWord(unwanted$,j,sep$)) Then Return 0
+    Next j
+    TalkObject = GetWord(wanted$,i,sep$)
+    Return True
+End Function
+
+Function UpFirst$(st$)
+    Return ( Upper(Left(st$,1)) + Mid(st$,2) )
+End Function
+
+
+Function Parse$(st$)
+    st$ = CleanString(st$)
+    AddLog(">>>> " +st$)
+    If talkingto < 0 Then Return ParseSpecial(st$)
+    AddLog("#### Start: Parsing Input")
+    
+    ret = GetGenericLine(msg_error)
+    If st$ = "bye" Or st$ = "see you" Or st$ = "end" Or st$ = "quit" Or st$ = "exit" Then
+        EndTalk()
+        Return GetGenericLine(msg_bye)
+    ElseIf KeyWord(st$,"who,name,profession,job,work") And KeyWord(st$,"you,thee") Then
+        ret = GetRandWord("Why would I tell you that?|Who are You anyway?|That is none of your bussiness.|I could tell you that, but then I'd have to kill you.","|") 
+    ElseIf KeyWord(st$,"where,find") Or KeyWord(st$,"i want","your") Then
+        If KeyWord(st$,"quest,mission,task,job,work") Then
+            If Rand(0,1) Then
+                ret = GetRandWord("Well, I don't have any jobs for you.|I don't know...","|") 
+            Else
+                If curmap = 0 Then
+                    st1 = GetRandWord("Go to|Try|Go to|Try|Maybe you should try|You could perhaps get a job from|You can propably find that from","|") + " the nearest "
+                    st2 = GetRandWord("town|city|settlement|village|castle|garrison","|") + "."
+                    ret = st1+st2   
+                Else
+                    ret = GetRandWord("Go to|Try|Go to|Try|Maybe you should try|You could perhaps get a job from|You can propably find that from","|") + " the town hall."
+                EndIf
+            EndIf
+        ElseIf KeyWord(st$,"town,city,settlement,village,castle,garrison,stronghold") Then
+            If curmap = 0
+                rnd1 = Rand(1,4)
+                If rnd1 = 1 Then
+                    ret = GetRandWord("There are lots of those in the area.|Look around.","|") 
+                ElseIf rnd1 = 2
+                    st1 = GetRandWord("There is one in the|Just go|Try taking|Try going|Try heading","|") + " "
+                    st2 = GetRandWord("north|east|south|west|north|east|south|west|northeast|southeast|southwest|northwest","|") + "."
+                    ret = st1+st2 
+                Else
+                    st1 = GetRandWord("I am heading to one myself, so|That's actually my journey's goal, so|Hmm,","|") + " "
+                    st2 = GetRandWord("follow me|just follow me|you can tag along","|") + "."
+                    ret = st1+st2 
+                EndIf
+            Else
+                ret = GetRandWord("Isn't this one enough for you?|Err, you are in one right now.|Now that's a hard question!","|")
+            EndIf
+        ElseIf KeyWord(st$,"blacksmith,shop,store,hardware,weapon,buy") Then
+            If curmap = 0 Then
+                st1 = GetRandWord("You can go to|Try|You can shop in|You can buy things in|You can buy supplements in","|") + " the nearest "
+                st2 = GetRandWord("town|city|settlement|village","|") + "."
+                ret = st1+st2 
+            Else
+                ret = GetRandWord("I am pretty sure I saw one here somewhere...|Hmm, let me think...|Just go Downtown!|Ah, it can't be so hard to find that!|Ah, try harder!|Nope, haven't seen one around.","|")
+            EndIf
+        ElseIf KeyWord(st$,"church,cathedral,temple,monastery,pray,priest,cleric,pope,god") Then
+            If curmap = 0 Then
+                st1 = GetRandWord("Go to|Try|You can pray in|You can confess in|You can propably find that from","|") + " the nearest "
+                st2 = GetRandWord("town|city|settlement|village","|") + "."
+                ret = st1+st2             
+            Else
+                ret = GetRandWord("I am pretty sure I saw one here somewhere...|Hmm, let me think...|Just go Downtown!|Ah, it can't be so hard to find that!|Ah, try harder!|Nope, haven't seen one around.","|")
+            EndIf
+        ElseIf KeyWord(st$,"cave,dungeon,imp,demon,enemies,enemy,kill,adventure") Then
+            st1 = GetRandWord("Go to|Try|Search|Go to|Try|Search|You can find adventures in|There is adventures in|You will find dangers in","|") + " the "
+            st2 = GetRandWord("mountains|mountains|mountains|mountains|deep places of earth","|") + "."
+            ret = st1+st2 
+        EndIf
+    ElseIf KeyWord(st$,"money,coin,cash,gold,silver") Then
+        If curmap = 0 Then
+            st1 = GetRandWord("Go to|Try|You can gamble|You can get a job from|You can propably find that from","|") + " the nearest "
+            st2 = GetRandWord("town|city|settlement|village","|") + "."
+        Else
+            st1 = GetRandWord("Go to|Try|Go to|Try|Maybe you should try","|") + " "
+            st2 = GetRandWord("the city hall.|the town hall.","|") + "."
+        EndIf
+        ret = st1+st2
+    ElseIf KeyWord(st$,"news,gossip,going on, what's up,what is up,rumour,rumor") Then
+        ret = GetRandWord("I don't no anything.|My oncle turned 70.|Hmm...|Hmm...","|") 
+    ElseIf KeyWord(st$,"shit,fuck,suck,asshole,stupid,dumm,idiot,loser","i am") Then
+        EndTalk()
+        Return GetRandWord("There is no need to be rude.|I have better things to do.|I am done here.|I am leving now.|Impolite bastard!|Same to you!","|") 
+    ElseIf KeyWord(st$,"i want") And KeyWord(st$,"your") Then
+        ret = GetRandWord("That is impossible.|Sorry, but no can do.|I wish I could fulfill your wish, but I can't.|Maybe some other time...|Maybe in the next life...|We all hope our wishes were true.","|") 
+    ElseIf KeyWord(" "+st$+" ","hello, hi ,greetings,good morning,good day,good afternoon") Then
+        ret = GetRandWord("Well hello!|Greetings to you!|Hello.|Hello.|Hello!|Hi!","|") 
+    ElseIf KeyWord(st$,"how do you do,how are you,how are thee") Then
+        st1 = GetRandWord("Fine, thanks.|Just fine.|The same...|Same old, same old.|Fine.","|")
+        If Rand(1,2) = 1 Then st2 = GetRandWord("And you?|What about you?","|") Else st2 = ""
+        ret = st1+st2
+    ElseIf st = "nevermind" Or st = "no" Or st = "forget it" Or st = "whatever" Then
+        ret = GetRandWord("Ok...|Ok.|Okay.|Fine.|As you wish.|Anyway you want.","|")
+    ElseIf KeyWord(st$,"time,clock") Then
+        ret = GetRandWord("It's |It is ","|") + clock + GetRandWord(" o'clock.|.","|")
+    ElseIf KeyWord(st$,"thanks,thank you") Then
+        ret = GetRandWord("Don't mention it.|You are welcome.|You're welcome.","|")
+    EndIf
+
+    If KeyWord(st$,"aavesoturi rulez") Then ret = "JEEEEEEAAAAAAAAHHHHHHH!!!1" 
+    If KeyWord(st$,"aybabtu") Then ret = "Somebody set us up the bomb!" 
+    If KeyWord(st$,"about mozilla") Then ret = "...from the ash rose a great bird... fire and thunder!" 
+
+    If st = prevst Then ret = GetGenericLine(msg_repeat) 
+    If st = prevst And prevst = prev2st Then EndTalk(): ret = GetRandWord("I am done here.|I have better things to do.|I am leving now.","|") 
+    prev2st = prevst: prevst = st
+    AddLog("#### End: Parsing Input")
+    
+    Return ret
+End Function
+
+
+Function ParseSpecial$(st$)
+    AddLog("#### Start: Special Parser")
+    person = -talkingto
+
+    ret = GetGenericLine(msg_error)
+    If st$ = "bye" Or st$ = "see you" Or st$ = "end" Or st$ = "quit" Or st$ = "exit" Then
+        EndTalk()
+        Return GetGenericLine(msg_bye)
+    ElseIf (KeyWord(st$,"who,name,profession,job,work") And KeyWord(st$,"you,thee")) Or KeyWord(st$,"info") Then
+        If person = priest     Then ret = GetRandWord("I am a priest.|I am a man of God.|I am just a humble man.","|")
+        If person = shopkeeper Then ret = GetRandWord("I am a merchant.|I sell things.|I am a shopkeeper.|I run this shop.","|")
+        If person = innkeeper  Then ret = GetRandWord("I run this|I am the owner of this|I am the bartender of this","|") + " " + GetRandWord("inn.|tavern.|bar.|shithole.|restaurant.|joint.","|")
+        If person = stableboy  Then ret = GetRandWord("I sell horses.|I am a stableboy.|You can buy a horse from me.","|")
+        If person = lord       Then ret = GetRandWord("I rule this part of the land.|I am a lord of this castle.|I am a ruler of this castle.","|")
+    ElseIf KeyWord(st$,"shit,fuck,suck,asshole,stupid,dumm,idiot,loser,badass","i am") Then
+        EndTalk()
+        Return GetRandWord("There is no need to be rude.|I have better things to do.|I am done here.|Impolite bastard!|Same to you!","|") 
+    ElseIf KeyWord(" "+st$+" ","hello, hi ,greetings,good morning,good day,good afternoon") Then
+        ret = GetRandWord("Well hello!|Greetings to you!|Hello.|Hello.|Hello!|Hi!","|") 
+    ElseIf KeyWord(st$,"how do you do,how are you,how are thee") Then
+        st1 = GetRandWord("Fine, thanks.|Just fine.|The same...|Same old, same old.|Fine.","|")
+        If Rand(1,2) = 1 Then st2 = GetRandWord("And you?|What about you?","|") Else st2 = ""
+        ret = st1+st2 
+    ElseIf KeyWord(st$,"time,clock") Then
+        ret = GetRandWord("It's |It is ","|") + clock + GetRandWord(" o'clock.|.","|")        
+    ElseIf KeyWord(st$,"thanks,thank you") Then
+        ret = GetRandWord("Don't mention it.|You are welcome.|You're welcome.","|")
+    EndIf
+
+
+    If person = priest Then
+        If KeyWord(st$,"indulgence,bless,confess,erase sin,donate,donation,give money,give gold") Then
+            ret = GetRandWord("I can erase all your sins! Just tell me how much gold you are willing to donate.","|")
+        ElseIf Int(st$) <> 0 Then
+            tempdon = Int(st$)
+            If tempdon > gold Then
+                ret = GetRandWord("I seems to me that you do not have that much gold.","|")
+            Else
+                gold = gold - tempdon
+                faith = faith + Int(tempdon / 50)
+                ret = GetRandWord("Bless you, my child!|All your sins are now erased! (Or at least some of them...)|You are now free of sins! (Or maybe not completely, but...)","|")
+            EndIf
+        Else
+            ret = GetGenericLine(msg_error)
+        EndIf
+        
+    ElseIf person = shopkeeper
+    manne=0
+        If ( KeyWord(st$,"i want","sell") Or KeyWord(st$,"i need") Or (KeyWord(st$,"buy,get") And KeyWord(st$,"i")) Or (KeyWord(st$,"sell") And KeyWord(st$,"me")) ) Or Qflag = 250 Then
+            If KeyWord(st$,"big,large,great,long,two handed,two-handed,twohanded,two hand,two-hand,twohand") And KeyWord(st$,"sword,blade") Then
+                Qflag = bigsword
+                tempcost = cost_bigsword * pricelevel
+                st3 = GetRandWord("a longsword|two-handed sword|a great sword","|")
+                st1 = GetRandWord(UpFirst(st3)+" costs you "+tempcost+" gold.|The price of "+st3+" is "+tempcost+" gold.|I can sell you "+st3+" for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"sword,blade,shield,buckler") Then
+                Qflag = 200 'sword vakio on nolla, joten...
+                tempcost = cost_sword * pricelevel
+                st1 = GetRandWord("A sword and shield combination costs you "+tempcost+" gold.|The price of a sword and shield combination is "+tempcost+" gold.|I can sell you a sword and shield combination for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"spear,stick,lance,shaft")
+                Qflag = spear
+                tempcost = cost_spear * pricelevel
+                st1 = GetRandWord("A spear costs you "+tempcost+" gold.|The price of a spear is "+tempcost+" gold.|I can sell you a spear for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"ax,axe")
+                Qflag = axe
+                tempcost = cost_axe * pricelevel
+                st1 = GetRandWord("An axe costs you "+tempcost+" gold.|The price of an axe is "+tempcost+" gold.|I can sell you an axe for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"flail")
+                Qflag = flail
+                tempcost = cost_flail * pricelevel
+                st1 = GetRandWord("A flail costs you "+tempcost+" gold.|The price of a flail is "+tempcost+" gold.|I can sell you a flail for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"dagger,knife,small sword,small blade")
+                Qflag = dagger
+                tempcost = cost_dagger * pricelevel
+                st1 = GetRandWord("A dagger costs you "+tempcost+" gold.|The price of a dagger is "+tempcost+" gold.|I can sell you a dagger for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"club,bludgeon,mace")
+                Qflag = club
+                tempcost = cost_club * pricelevel
+                st1 = GetRandWord("A club costs you "+tempcost+" gold.|The price of a club combination is "+tempcost+" gold.|I can sell you a club for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"weapon") Then
+                Qflag = 250
+                st1 = GetRandWord("I sell many kinds of weapons|My stock is wide|I have many different weapons here","|") + ", so"
+                st2 = GetRandWord("make your choice|make your pick|narrow your plea|choose one of them","|") + "."
+                ret = st1 + st2
+            EndIf
+        ElseIf st$ = "ok" And Qflag > 0 Then
+            If Qflag = 200 Then Qflag = sword
+            tempcost = GetStat(Qflag,cost) * pricelevel
+            slot = FreeInvSlot()
+            If gold => tempcost And slot > 0 Then
+                gold = gold - tempcost
+                inv(slot) = Qflag
+                Qflag = 0
+                EndTalk()
+                Return GetRandWord("Nice doing bussiness with you.|Enjoy it!|Have a nice day!|Have nice time with it!|Come back anytime.","|")
+            ElseIf slot = 0
+                ret = GetRandWord("It seems to me that you cannot carry any more items.|It seems to me that your inventory is full.|Where were you planning to carry this thing?|I am not sure if you have enough room for this item.","|")
+            Else
+                ret = GetRandWord("I don't do charity, get the money!|Come back when you have money.|I seems to me that you have not enough gold.","|")
+            EndIf
+            Qflag = 0
+        ElseIf KeyWord(st$,"you want") Or KeyWord(st$,"you need") Or (KeyWord(st$,"buy","i") And (KeyWord(st$,"me,my") Or KeyWord(st$,"you"))) Or (KeyWord(st$,"sell") And KeyWord(st$,"i")) Then
+        manne=0
+            If KeyWord(st$,"big,large,great,long,two handed,two-handed,twohanded,two hand,two-hand,twohand") And KeyWord(st$,"sword,blade") Then
+                Qflag = -bigsword
+                tempcost = cost_bigsword * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"sword,blade,shield,buckler") Then
+                Qflag = -200 'sword vakio on nolla, joten...
+                tempcost = cost_sword * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"spear,stick,lance,shaft")
+                Qflag = -spear
+                tempcost = cost_spear * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"ax,axe")
+                Qflag = -axe
+                tempcost = cost_axe * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"flail")
+                Qflag = -flail
+                tempcost = cost_flail * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"dagger,knife,small sword,small blade")
+                Qflag = -dagger
+                tempcost = cost_dagger * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            ElseIf KeyWord(st$,"club,bludgeon,mace")
+                Qflag = -club
+                tempcost = cost_club * pricelevel * .75
+                st1 = GetRandWord("I give you "+tempcost+" gold.|I give you "+tempcost+" gold for it.|"+tempcost+" gold is my offer.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to sell it!","|")
+                ret = st1 + " " +st2
+            EndIf
+        ElseIf st$ = "ok" And Qflag < 0 Then
+            If Qflag = -200 Then Qflag = -sword
+            tempcost = GetStat(-Qflag,cost) * pricelevel
+            slot = HasItem(-Qflag)
+            Qflag = 0
+            If slot > 0 Then
+                gold = gold + tempcost
+                RemoveItem(slot)
+                EndTalk()
+                Return GetRandWord("Nice doing bussiness with you.|Come back anytime!|Have a nice day!|Come back if you have more to sell!|Come back if you need anything.","|")
+            Else
+                ret = GetRandWord("It seems to me that you don't have the item.|It seems you don't own the item.|Are you selling air?|Why don't you come back when you have it?","|")
+            EndIf
+        ElseIf KeyWord(st$,"bargain,discount,sale,reduction,deduction,rebate,cut rate,haggle") Then
+            If (Rand(1,5) = 1 And faith > -2) Or (Rand(1,2) = 1 And faith > 10) Then
+                pricelevel = pricelevel * Rnd(.7,.9)
+                ret = GetRandWord("I suppose I could give you a small discount.|Okay, but just a small one.|Well, fine.|Okay. Now some bussiness?|Done! Now some bussiness?","|")
+            Else
+                ret = GetRandWord("I don't do that.|Not today.|No way, sorry.|Sorry...|I'm sorry, but the answer is no.|Nope.","|")
+            EndIf
+        ElseIf KeyWord(st$,"see,what,what's") And KeyWord(st$,"stock,items,articles,sell,have") Then
+            ret = GetRandWord("I sell weapons.|I have all kinds of weapons here.|Weapons! Those are my articles.","|")
+        EndIf
+        
+    ElseIf person = innkeeper
+        If KeyWord(st$,"beer,drink,spirit,wine,alcohol,brandy,champagne,scotch,whisky,liquer,firewater,vodka,gin,sider,shot") Then
+            If Rand(0,2) = 0 Then st1 = GetRandWord("I can give you a drink.|I can sell you a drink.|Want a drink, eh?|Coming!","|") + " " Else st1 = UpFirst(TalkObject) + "? "
+            st2 = GetRandWord("Just say 'ok'.|Say 'ok' to buy it.|'Ok' is the magic word...|Say 'ok' to get it!","|")
+            ret = st1+st2
+            Qflag = True
+        ElseIf KeyWord(st$,"ruuvimeisseli") Then
+            faith - 1
+            If cond < maxcond Then cond  + 1            
+            ret = "This one's on the house!"
+        ElseIf st$ = "ok" And Qflag = True Then
+            Qflag = False
+            tempcost = Rand(1,2)
+            If gold => tempcost Then
+                gold = gold - tempcost
+                faith - 1
+                If cond < maxcond Then cond  + 1
+                ret = GetRandWord("Here it goes!|Here you are.|Tell me if you want more.|Let me know if you want another one.|Enjoy!|Enjoy.|Have fun!","|")
+            Else
+                ret = GetRandWord("I don't do charity, get the money!|Come back when you have money.|I seems to me that you have not enough gold.|I'm sorry, but it's not free, you know...","|")
+            EndIf
+        ElseIf KeyWord(st$,"room,place,sleep,rest,accommodation") Then
+            ret = GetRandWord("You can sleep by the tables.|You can rest there, by the tables.|I have no room for you, but you can sleep on those chairs.","|")
+        EndIf
+        
+    ElseIf person = stableboy
+        tempcost = Float(cost_horse) * pricelevel
+        If KeyWord(st$,"horse") And ( KeyWord(st$,"i want","sell") Or KeyWord(st$,"i need") Or (KeyWord(st$,"buy") And KeyWord(st$,"i")) Or (KeyWord(st$,"sell") And KeyWord(st$,"me")) ) Then
+            If horse = False Then
+                st1 = GetRandWord("A horse costs you "+tempcost+" gold.|The price of a horse is "+tempcost+" gold.|I can sell you a horse for "+tempcost+" gold.","|")
+                st2 = GetRandWord("Just say 'ok' and we have a deal.|Just say 'ok' if you are interested.|'Ok' is the magic word...|Say 'ok' to buy it!","|")
+                ret = st1 + " " +st2
+                Qflag = True
+            Else
+                Return GetRandWord("You already have one!|One is enough for you.","|")
+            EndIf
+        ElseIf KeyWord(st$,"horse") And ( KeyWord(st$,"you want,thee want") Or KeyWord(st$,"you need,thee need") Or (KeyWord(st$,"buy","i") And (KeyWord(st$,"me,my") Or KeyWord(st$,"you"))) Or (KeyWord(st$,"sell") And KeyWord(st$,"i")) ) Then
+            Return GetRandWord("No can do, it's a used one!|Sorry, but I don't buy used horses...","|")
+        ElseIf st$ = "ok" And Qflag = True Then
+            Qflag = False
+            If gold => tempcost Then
+                gold = gold - tempcost
+                horse  = True
+                riding = True
+                EndTalk()
+                Return GetRandWord("Nice doing bussiness with you.|Enjoy your new transport!|Have a nice day!|Have a nice ride!|Come back anytime.","|")
+            Else
+                ret = GetRandWord("I don't do charity, get the money!|Come back when you have money.|I seems to me that you have not enough gold.","|")
+            EndIf
+        ElseIf KeyWord(st$,"see,what,what's") And KeyWord(st$,"stock,items,articles,sell,have") Then
+            ret = GetRandWord("I sell horses.|I have the finest horses in the world!|Fine transports and companions can be bought here.","|")
+        Else
+            ret = GetGenericLine(msg_error)
+        EndIf
+    
+    // LORD //
+    ElseIf person = lord
+        If KeyWord(st$,"quest,mission,task,job,work,money,coin,cash,gold,silver,payment") Then
+            manne=0
+            temp = ScanQuests(1,curmap)
+            manu=0
+            If temp = 2 Then
+                ret = GetRandWord("Good job.|Well done.|You seem to have accomplished your mission.","|")
+                ret = ret + " " + GetRandWord("Here is your payment.|Here is your money.","|")
+                For q.QUEST = Each QUEST
+                    If q\quest_type = 1 And q\employer = curmap And q\status = 2 Then
+                        gold = gold + q\payment
+                        Delete q
+                    EndIf
+                Next q                
+            Else
+                ret = GetRandWord("If you are looking for a job, I could use a courier.|If you are looking for a job, I happen to need a courier.","|")
+                ret = ret + " " + GetRandWord("Are you interested?|Interested?|Does that sound good?","|")
+                Qflag = 1
+            EndIf
+        ElseIf KeyWord(st$,"yes,absolutely,yeah,ok,okay,maybe,perhaps") And QFlag = 1 Then
+manne=0
+            Qflag = 2
+            tempcost = Rand(30,130)
+            Repeat
+                desttown = GetNearbyTown(locs(curmap,1),locs(curmap,2),2)
+            Until desttown <> curmap
+            If locname(desttown) = "" Then locname(desttown) = RandomPlaceName()
+            ret = GetRandWord("I pay you "+tempcost+" gold, if you deliver a message to a town called "+locname(desttown)+" "+GetDirection(worldhx,worldhy,locs(desttown,1),locs(desttown,2))+" of here, ok?|You would get "+tempcost+" gold for delivering a message to a nearby town called "+locname(desttown)+" "+GetDirection(worldhx,worldhy,locs(desttown,1),locs(desttown,2))+" of here, ok?","|")
+            tempint1 = tempcost: tempint2 = desttown
+manne=0
+        ElseIf KeyWord(st$,"yes,absolutely,yeah,ok,okay") And QFlag = 2 Then
+manne=0
+            Qflag = 0
+            newquest.QUEST =  New(QUEST)
+            newquest\quest_type = quest_message
+            newquest\status = 1
+            newquest\payment = tempint1
+            newquest\employer = curmap
+            newquest\destination = tempint2
+            ret = GetRandWord("Come collect your payment when you're done.|Come back when done for the payment.","|")
+manne=0            
+        ElseIf KeyWord(st$,"message,note,delivery") Then
+            For q.QUEST = Each QUEST
+                If q\quest_type = quest_message And q\status = 1 And q\destination = curmap Then
+                    tempcost = Rand(1,3)
+                    gold = gold + tempcost
+                    st1 = GetRandWord("A message for me, how nice!|Well hand it over.|Thank you.","|") + " "
+                    st2 = GetRandWord("Here's a tip of "+tempcost+".|Have some gold for the trouble.","|")
+                    ret = st1+st2
+                    q\status = 2
+                    Exit
+                EndIf
+            Next q
+        EndIf
+    EndIf
+
+
+    If st = prevst And InStr("yes,absolutely,yeah,ok,okay",st) = 0 Then ret = GetGenericLine(msg_repeat) 
+    prev2st = prevst: prevst = st
+    
+    AddLog("#### End: Special Parser")
+    Return ret
+End Function
+
+
+
+
+
+
+Function ScanQuests(qtype,empl)
+    For q.QUEST = Each QUEST
+        If q\quest_type = qtype And q\employer = empl Then Return q\status
+    Next q
+End Function
+
+
+
+
+// Misc
+
+
+Function RandomPlaceName$()
+    If Rand(0,2) = 0 Then st3 = GetRandWord("New,North,South,East,West,Upper,Lower,Greater,Lesser",",") + " " Else st3 = ""
+    st1 = GetRandWord("Silver,Peach,Pine,Birch,Willow,Mount,Rock,Water,Horn,Hollow,Red,Green,Blue,Purple,White,Rich,Long,Short,Holly,Holy",",")
+    st2 = GetRandWord("ville,vale,dale,burg,shire,hill,brook,wood,hold,field, Valley, Bay, Grove, Meadows, Hill, Pass, Court, Arbor, Forest, Chase, Bridge, Gate, Lake, Crossing, Field",",")
+    Return st3 + st1 + st2
+End Function
+
+
+Function Luck#()
+    Return Min(1,Rnd(1) + (faith/50)*(faith>0))
+End Function
+
+
+Function AddMsg(m$,mdel=4000)
+    AddLog("Msg: "+m)
+    msg = m
+    msgdelay = mdel
+    msgtimer = Timer()
+End Function
+
+
+Function Sgn(num)
+   If num>0 Then Return 1
+   If num<0 Then Return -1
+   Return 0
+End Function
+
+
+Function RowText(st$,x,x2,y,center=0)
+    If x + TextWidth(st$) < x2 Then
+        If center = ON Then Text (x+x2)/2-TextWidth(st$)/2,y,st$ Else Text x,y,st$
+    Else
+        For i = 1 To CountWords(st$)
+            word$ = GetWord(st$,i)
+            If x + TextWidth(sentence$) + TextWidth(word$) > x2 Then
+                If center = ON Then
+                    Text (x + x2)/2 - TextWidth(sentence$)/2, y, sentence$
+                Else
+                    Text x, y, sentence$
+                EndIf           
+                sentence$ = ""
+                y = y + TextHeight("I")
+            EndIf
+            sentence$ = sentence$ + word$ + " "
+        Next i
+        If sentence$ <> "" Then
+            If center = ON Then Text (x+x2)/2-TextWidth(sentence$)/2,y,sentence$ Else Text x,y,sentence$
+        EndIf
+    EndIf
+End Function
+
+
+Function Button(txt$,butx,buty,butw,buth,sel)
+        Color 80,248,255
+        Box butx,buty,butw,buth,OFF
+        Color 255,80,255
+        CenterText butx+butw/2, buty+buth/2, txt, 2
+        If sel = True Then Box butx,buty,butw,buth,OFF
+End Function
+
+
+Function ReadValue$(file$, id$)
+    Value$ = "ERROR"
+    id     = Upper(id)
+	iFile  = OpenToRead(file)
+	While Not EOF(iFile)
+		row$ = ReadLine(iFile)
+        If Left(row,1) <> "#" Then
+            sep = InStr(row$,"=")
+            If sep
+                If Upper(Trim(Left(row,sep-1))) = id Then
+                    Value = Trim(Mid(row,sep+1))
+                EndIf
+            EndIf
+        EndIf
+	Wend
+	CloseFile iFile
+    If Value = "ERROR" Then AddLog("#### Error reading settings: "+id$)
+	Return Value
+End Function
+
+
+Function AddLog(st$,logfile$="")
+    If logfile = "" Then logfile = "log.txt"
+    iFile = OpenToEdit(logfile)
+        SeekFile  iFile,FileSize(logfile)
+        WriteLine iFile,st$
+    CloseFile iFile
+End Function
+
+
+Function Tappelu()
+    TOP:
+    For i=1 To 32:AMMUS_ELOSSA(i)=False:Next i
+    x1#=ScreenWidth()/4*3:y1#=ScreenHeight()/2:a1=0:x2#=ScreenWidth()/4:y2#=ScreenHeight()/2:a2=180
+    Repeat
+        Cls
+        Color cbWhite: Text 10,ScreenHeight()-TextHeight("I"),"WASD+TAB, Arrows+CTRL"
+        a1=a1-((RightKey()-LeftKey()))*5:s1=((UpKey()-DownKey()))*2:x1=x1+Cos(a1)*s1:y1=y1-Sin(a1)*s1
+        a2=a2-((KeyDown(cbKeyD)-KeyDown(cbKeyA)))*5:s2=((KeyDown(cbKeyW)-KeyDown(cbKeyS)))*2:x2=x2+Cos(a2)*s2:y2=y2-Sin(a2)*s2
+        If KeyDown(cbKeyRControl) And Timer()>edellinen+500 Then
+            For i=1 To 32
+                If AMMUS_ELOSSA(i)=False Then AMMUS_ELOSSA(i)=True:AMMUS_X(i)=x1+Cos(a1)*16:AMMUS_Y(i)=y1-Sin(a1)*16:AMMUS_KULMA(i)=a1:edellinen=Timer():Exit
+            Next i
+        EndIf
+        If KeyDown(cbKeyTab) And Timer()>edellinen2+500 Then
+            For i=1 To 32
+                If AMMUS_ELOSSA(i)=False Then AMMUS_ELOSSA(i)=True:AMMUS_X(i)=x2+Cos(a2)*16:AMMUS_Y(i)=y2-Sin(a2)*16:AMMUS_KULMA(i)=a2:edellinen2=Timer():Exit
+            Next i
+        EndIf
+        Color 255,80,255:Circle x1-8,y1-8,16,OFF:Color cbWhite:Line x1,y1,x1+Cos(a1)*16,y1-Sin(a1)*16
+        Color 80,248,255:Circle x2-8,y2-8,16,OFF:Color cbWhite:Line x2,y2,x2+Cos(a2)*16,y2-Sin(a2)*16
+        For i=1 To 32
+            If AMMUS_ELOSSA(i)=True Then
+                AMMUS_X(i)=AMMUS_X(i)+Cos(AMMUS_KULMA(i))*5:AMMUS_Y(i)=AMMUS_Y(i)-Sin(AMMUS_KULMA(i))*5
+                If AMMUS_X(i)<0 Or AMMUS_X(i)>ScreenWidth() Or AMMUS_Y(i)<0 Or AMMUS_Y(i)>ScreenHeight() Then AMMUS_ELOSSA(i)=False
+                Dot AMMUS_X(i),AMMUS_Y(i)
+                If Distance(AMMUS_X(i),AMMUS_Y(i),x1,y1)<16 Then Print "Magenta died!":pisteet2=pisteet2+1:Goto Endi
+                If Distance(AMMUS_X(i),AMMUS_Y(i),x2,y2)<16 Then Print "Cyan died!":pisteet1=pisteet1+1:Goto Endi
+            EndIf
+        Next i
+        DrawScreen
+    Forever
+    Endi:
+    Print "Cyan:"+pisteet2:Print "Magenta:"+pisteet1:Print "ESC to quit, ENTER to start..."
+    Repeat
+        If KeyDown(28) Then Goto TOP
+        If KeyDown(1)  Then ClearKeys : Wait 500: Exit
+    Forever
+End Function
+
+
+
+
+
+
+Function SaveWorld(file$)
+    iFile = OpenToWrite(file$)
+        WriteInt iFile,seed
+        For i = 1 To numMaps
+            WriteInt iFile, locs(i,10)
+        Next i
+    CloseFile(iFile)
+End Function
+
+Function LoadWorld(file$)
+    iFile = OpenToRead(file$)
+        seed = ReadInt(iFile)
+        For i = 1 To numMaps
+            locs(i,10) = ReadInt(iFile)
+            If locs(i,10) <> manne Then End
+        Next i
+    CloseFile(iFile)
+End Function
+

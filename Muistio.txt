@@ -1,0 +1,19 @@
+-----------
+* tee/korjaa
+/ testaa
+-----------
+
+HIGH:
+-----
+*kaikki spessuparserit toimimaan
+/symbols
+/ei onnaa sword/shield
+*pappi ei kiitä
+-----
+
+low:
+*special parseriin tavallisetkin turinat
+*kamaa ovien edessä
+*Invin pikanäppäimet
+*npc:t tarttuu kaupunki tileen
+/hevoskauppias katosi
