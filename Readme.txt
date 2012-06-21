@@ -2,10 +2,6 @@ Knight of Faith v.alpha - README
 --------------------------------
 LICENSE: See LICENSE-file
 
-!!!!!!!!!!!!!ALPHA TESTAAJAT, LUKEKAA alpha_ohje.txt!!!!!!!!!!!!!!!!!
-
-(tämä on vielä kesken)
-
 Contents
 
 1. Setup & Start-up
@@ -86,9 +82,7 @@ when you are really attacking.
 3. Credits
 ----------
 
-Project Supervisor	-	Tapio Vierros
-Lead Programmer		-	Tapio Vierros
-Lead Graphics Artist	-	Tapio Vierros
+Programming & Art -	Tapio Vierros
 
 Special Thanks To "ristis" - my beloved enemy, competitor and idea stealer
 
