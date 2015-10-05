@@ -49,7 +49,7 @@ while in a 'talk' mode. A console appears in the bottom of the screen,
 waiting your input.
 
 The conversation is done in english, with more or less FULL SENTENCES.
-In most cases you won't be able to do your bussiness with just one or
+In most cases you won't be able to do your business with just one or
 two words. This is to ensure that the parser is as versatile as possible
 (can understand more complex things than just "buy" or "sell") and to
 increase immersion. Remember that there are many different ways of saying
